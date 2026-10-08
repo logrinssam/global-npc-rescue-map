@@ -1,44 +1,374 @@
 <!doctype html>
 <html lang="ko">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071b22">
-<title>지구촌 NPC 구조대 — 월드맵</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#2f7fb5">
+<title>지구촌 NPC 구조대</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&display=swap">
 <style>
-:root{--ink:#071b22;--ink2:#0b2931;--paper:#f4ecd9;--mint:#70e0bd;--gold:#ffc95f;--white:#fffdf7;--muted:#9cb4b6;--line:rgba(219,238,226,.14)}
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--ink)}body{color:var(--white);font-family:Pretendard,"Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;overflow-x:hidden}button,a{font:inherit}button{color:inherit}.app{min-height:100svh;display:grid;grid-template-rows:auto 1fr;background:radial-gradient(circle at 17% 12%,rgba(48,126,120,.2),transparent 28rem),radial-gradient(circle at 78% 75%,rgba(255,201,95,.06),transparent 30rem),var(--ink)}
-.topbar{height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,3.2vw,52px);border-bottom:1px solid var(--line);background:rgba(7,27,34,.82);backdrop-filter:blur(16px);position:relative;z-index:20}.brand{display:flex;align-items:center;gap:14px}.brand-mark{width:38px;height:38px;border:1px solid rgba(112,224,189,.55);border-radius:50%;display:grid;place-items:center;position:relative;box-shadow:inset 0 0 0 5px rgba(112,224,189,.07)}.brand-mark:before,.brand-mark:after{content:"";position:absolute;background:var(--mint)}.brand-mark:before{width:2px;height:12px;top:5px;transform:rotate(18deg)}.brand-mark:after{width:7px;height:7px;border-radius:50%}.brand-eyebrow{color:var(--mint);font-size:10px;letter-spacing:.22em;font-weight:800}.brand-title{margin-top:2px;font:700 17px/1.1 Georgia,"Noto Serif KR",serif;letter-spacing:-.02em}.hud{display:flex;align-items:center;gap:24px}.hud-label{color:var(--muted);font-size:11px;letter-spacing:.12em;font-weight:700}.fragments{display:flex;gap:7px;margin-top:6px}.fragment{width:17px;height:17px;transform:rotate(45deg);border:1px solid #6b8585;background:rgba(255,255,255,.03)}.fragment.on{border-color:var(--gold);background:var(--gold);box-shadow:0 0 15px rgba(255,201,95,.45)}.reset{border:1px solid var(--line);background:transparent;padding:9px 13px;border-radius:999px;color:var(--muted);font-size:12px;cursor:pointer}.reset:hover{color:var(--white);border-color:rgba(255,255,255,.32)}
-main{min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 358px}.map-stage{min-height:calc(100svh - 76px);position:relative;overflow:hidden}.map-stage:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(90deg,rgba(7,27,34,.12),transparent 15%,transparent 80%,rgba(7,27,34,.65))}.map-kicker{position:absolute;top:27px;left:clamp(20px,3.2vw,52px);z-index:6}.map-kicker small{display:block;color:var(--gold);font-size:10px;font-weight:800;letter-spacing:.2em}.map-kicker h1{margin:6px 0 0;font:600 clamp(24px,3vw,42px)/1.08 Georgia,"Noto Serif KR",serif;letter-spacing:-.04em}.map-kicker p{margin:8px 0 0;color:var(--muted);font-size:13px}.map-wrap{position:absolute;inset:0}.world-map{width:100%;height:100%;display:block}.ocean-grid{opacity:.19}.land{fill:#183d3d;stroke:#32615b;stroke-width:1}.land-shadow{fill:rgba(0,0,0,.16);transform:translateY(7px)}.contour{fill:none;stroke:#5c8174;stroke-width:.75;opacity:.33}.route{fill:none;stroke:#6c8b84;stroke-width:1.6;stroke-dasharray:2 8;stroke-linecap:round;opacity:.48}.route.reached{stroke:var(--mint);opacity:.88}
-.map-node{position:absolute;translate:-50% -50%;z-index:5}.node-button{border:0;background:none;padding:0;cursor:pointer;display:grid;place-items:center}.node-core{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--paper);color:var(--ink);border:5px solid var(--ink2);box-shadow:0 0 0 1px rgba(244,236,217,.52),0 8px 22px rgba(0,0,0,.34);transition:.25s;position:relative}.node-core svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.8}.node-label{position:absolute;top:55px;left:50%;translate:-50% 0;white-space:nowrap;background:rgba(4,21,26,.88);border:1px solid rgba(244,236,217,.16);border-radius:7px;padding:6px 9px 7px;text-align:left;box-shadow:0 8px 24px rgba(0,0,0,.28);transition:.2s}.node-label strong{display:block;font:700 12px Georgia,"Noto Serif KR",serif}.node-label span{display:block;margin-top:2px;color:var(--muted);font-size:9px;letter-spacing:.08em}.node-button:hover .node-core,.node-button:focus-visible .node-core{transform:translateY(-4px) scale(1.08)}.node-button:focus-visible{outline:2px solid var(--gold);outline-offset:7px;border-radius:50%}.map-node.current .node-core{background:var(--gold)}.map-node.current .node-core:before{content:"";position:absolute;inset:-11px;border:2px solid rgba(255,201,95,.62);border-radius:50%;box-shadow:0 0 18px rgba(255,201,95,.18)}.map-node.done .node-core{background:var(--mint)}.map-node.done .node-label span{color:var(--mint)}.map-node.locked .node-core{background:#263e42;color:#769093;filter:saturate(.3)}.map-node.locked .node-label{opacity:.55}.map-node.locked .node-button{cursor:not-allowed}.map-node.shake{animation:shake .35s ease}@keyframes shake{25%{translate:calc(-50% - 5px) -50%}75%{translate:calc(-50% + 5px) -50%}}
-.legend{position:absolute;left:clamp(20px,3.2vw,52px);bottom:30px;z-index:6;display:flex;gap:18px;color:#8ba4a5;font-size:10px;letter-spacing:.06em}.legend span{display:flex;align-items:center;gap:6px}.legend i{width:8px;height:8px;border-radius:50%;display:block;background:#526b6e}.legend .is-current i{background:var(--gold);box-shadow:0 0 10px var(--gold)}.legend .is-done i{background:var(--mint)}.toast{position:absolute;left:50%;bottom:28px;z-index:12;translate:-50% 20px;padding:10px 16px;border-radius:999px;color:var(--paper);background:#07181d;border:1px solid rgba(255,255,255,.15);font-size:12px;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;translate:-50% 0}
-.quest-panel{position:relative;z-index:10;min-height:calc(100svh - 76px);padding:34px 30px 28px;background:linear-gradient(180deg,#0d2d35,#091f26);border-left:1px solid var(--line);display:flex;flex-direction:column}.panel-index{color:var(--gold);font-size:10px;letter-spacing:.19em;font-weight:800}.panel-place{margin:14px 0 0;color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.08em}.panel-title{margin:6px 0 0;font:600 31px/1.16 Georgia,"Noto Serif KR",serif;letter-spacing:-.045em;word-break:keep-all}.rule{width:46px;height:1px;background:var(--gold);margin:22px 0}.npc-line{display:flex;align-items:center;gap:12px}.portrait{width:42px;height:42px;border-radius:50%;border:1px solid rgba(244,236,217,.25);background:var(--paper);color:var(--ink);display:grid;place-items:center;font:700 16px Georgia,serif}.npc-line strong{display:block;font-size:13px}.npc-line span{color:var(--muted);font-size:11px}.brief{margin:18px 0 0;color:#c8d6d3;font-size:14px;line-height:1.72;word-break:keep-all}.objective{margin-top:20px;padding:17px 16px;border:1px solid rgba(255,201,95,.22);background:rgba(255,201,95,.055)}.objective small{color:var(--gold);font-size:9px;font-weight:800;letter-spacing:.16em}.objective p{margin:8px 0 0;color:var(--paper);font-size:13px;line-height:1.55;word-break:keep-all}.panel-actions{margin-top:auto;padding-top:26px}.enter{width:100%;border:0;border-radius:3px;padding:15px 18px;cursor:pointer;background:var(--paper);color:var(--ink);font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:space-between;transition:.2s}.enter:hover{background:var(--gold);transform:translateY(-2px)}.enter:disabled{opacity:.38;cursor:not-allowed;transform:none}.enter .arrow{font-size:20px;line-height:1}.egpt-note{margin:10px 0 0;color:#6f8d90;font-size:10px;text-align:center}
-dialog{width:min(610px,calc(100% - 30px));border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:0;color:var(--white);background:#0c2830;box-shadow:0 22px 70px rgba(0,0,0,.34)}dialog::backdrop{background:rgba(2,13,16,.76);backdrop-filter:blur(8px)}.dialog-inner{padding:28px}.dialog-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}.dialog-head small{color:var(--gold);font-size:10px;letter-spacing:.17em;font-weight:800}.dialog-head h2{margin:8px 0 0;font:600 28px/1.2 Georgia,"Noto Serif KR",serif}.close{border:1px solid var(--line);background:transparent;width:34px;height:34px;border-radius:50%;cursor:pointer;color:var(--muted)}.dialog-copy{margin:21px 0 0;padding:18px;background:rgba(0,0,0,.13);border-left:2px solid var(--mint);color:#cfdbd7;font-size:14px;line-height:1.7}.dialog-mission{margin:18px 0 0;color:var(--paper);font-size:14px;line-height:1.7}.dialog-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:25px}.dialog-actions button,.dialog-actions a{border-radius:3px;padding:13px;text-align:center;text-decoration:none;font-weight:800;font-size:12px;cursor:pointer}.talk{background:var(--paper);color:var(--ink);border:0}.complete{background:transparent;color:var(--mint);border:1px solid rgba(112,224,189,.42)}.complete:hover{background:rgba(112,224,189,.12)}.credits{margin-top:16px;color:#6f8d90;font-size:10px;text-align:center}.celebrate{position:fixed;inset:0;z-index:99;pointer-events:none;display:none;place-items:center}.celebrate.show{display:grid}.reward{width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,#ffe7a4 0 25%,#ffc95f 26% 43%,transparent 44%);display:grid;place-items:center;color:var(--ink);font:800 12px/1.3 Georgia,serif;text-align:center;filter:drop-shadow(0 0 36px rgba(255,201,95,.5));animation:reward .95s ease both}@keyframes reward{0%{transform:scale(.2) rotate(-50deg);opacity:0}55%{transform:scale(1.12) rotate(3deg);opacity:1}100%{transform:scale(1);opacity:0}}
-@media(max-width:900px){.topbar{height:68px}.brand-title{font-size:15px}.hud-label{display:none}.reset{display:none}main{display:block}.map-stage{min-height:64svh}.map-kicker h1{font-size:27px}.map-kicker p{display:none}.world-map{transform:scale(1.2);transform-origin:center 58%}.quest-panel{min-height:auto;border-left:0;border-top:1px solid var(--line);padding:25px 22px}.panel-title{font-size:26px}.panel-actions{margin-top:22px}.legend{bottom:18px}.node-label{display:none}.node-core{width:40px;height:40px}}@media(max-width:520px){.topbar{padding:0 16px}.brand-eyebrow{display:none}.fragment{width:13px;height:13px}.map-stage{min-height:58svh}.map-kicker{top:20px;left:18px}.world-map{transform:scale(1.52);transform-origin:56% 59%}.node-core{width:35px;height:35px;border-width:4px}.node-core svg{width:17px;height:17px}.legend{left:18px;gap:10px;font-size:9px}.dialog-inner{padding:22px 18px}.dialog-actions{grid-template-columns:1fr}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+:root{
+  --bg:#eef6fb;--ocean:#bfe1f2;--ocean-line:#a6d2e8;--land:#f3e7c4;--land-edge:#d9c48f;
+  --ink:#1d2b36;--ink-soft:#4a5d6b;--card:#ffffff;--line:#d7e3ea;
+  --blue:#2f7fb5;--blue-dark:#225f88;--yellow:#ffc93c;--yellow-soft:#fff4cf;--green:#2fae74;--green-soft:#e3f6ec;--grey:#a9b4bc;
+  --title:"Jua","Apple SD Gothic Neo","Noto Sans KR",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg)}
+body{color:var(--ink);font-family:var(--title);font-weight:400;font-size:17px;line-height:1.6;word-break:keep-all;overflow-x:hidden}
+button,a,input{font:inherit}
+*{font-weight:400!important;font-synthesis:none}
+.app{min-height:100svh;display:grid;grid-template-rows:auto 1fr}
+
+/* 상단바 */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px clamp(16px,2.6vw,36px);background:var(--blue);color:#fff;box-shadow:0 2px 0 var(--blue-dark)}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--title);font-size:clamp(22px,2.4vw,30px);line-height:1.1}
+.brand .globe{font-size:1.2em}
+.hud{display:flex;align-items:center;gap:16px}
+.progress{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.14);padding:6px 14px;border-radius:999px}
+.progress-label{font-weight:700;font-size:15px}
+.fragments{display:flex;gap:6px}
+.fragment{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-size:15px;background:rgba(255,255,255,.2);border:2px dashed rgba(255,255,255,.55)}
+.fragment.on{background:var(--yellow);border:2px solid #fff;box-shadow:0 0 0 2px var(--yellow)}
+.reset{border:0;background:transparent;color:rgba(255,255,255,.75);font-size:13px;text-decoration:underline;cursor:pointer;padding:6px}
+.reset:hover{color:#fff}
+
+main{min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 400px}
+
+/* 지도 영역 */
+.map-stage{display:flex;flex-direction:column;min-height:0;padding:18px clamp(14px,2vw,28px) 18px}
+.howto{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 14px;padding:0;list-style:none}
+.howto li{display:flex;align-items:center;gap:8px;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:8px 14px;font-size:15px;font-weight:600}
+.howto b{width:26px;height:26px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:14px;flex:none}
+.map-frame{flex:1;min-height:300px;container-type:size;display:grid;place-items:center}
+.map-box{position:relative;width:min(100cqw,calc(100cqh * 1000 / 558));aspect-ratio:1000/558;container-type:inline-size;--n:clamp(30px,6cqw,58px)}
+.map-clip{position:absolute;inset:0;border-radius:20px;overflow:hidden;border:3px solid #fff;box-shadow:0 6px 20px rgba(29,43,54,.12)}
+.world-map{position:absolute;inset:0;width:100%;height:100%;display:block}
+.land{fill:var(--land);stroke:var(--land-edge);stroke-width:1.2;stroke-linejoin:round}
+.grat{stroke:var(--ocean-line);stroke-width:1;fill:none}
+.equator{stroke:#7fb7d4;stroke-width:1.4;stroke-dasharray:6 6;fill:none}
+.map-text{font-family:var(--title);fill:#8a7a4e;font-size:20px;text-anchor:middle;opacity:.85}
+.sea-text{font-family:var(--title);fill:#5c98b8;font-size:19px;text-anchor:middle;letter-spacing:3px}
+.small-text{font-size:13px;fill:#5c98b8;font-family:var(--title)}
+.route{fill:none;stroke:#7d95a4;stroke-width:2.6;stroke-dasharray:3 9;stroke-linecap:round;opacity:.6}
+.route.reached{stroke:var(--green);opacity:1}
+.leader{stroke:var(--ink-soft);stroke-width:1.6;stroke-dasharray:3 3}
+.pin-dot{fill:#e2553f;stroke:#fff;stroke-width:2}
+
+.map-node{position:absolute;translate:-50% -50%;z-index:5}
+.node-button{border:0;background:none;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:calc(var(--n)*.07);position:relative}
+.node-core{width:var(--n);height:var(--n);border-radius:50%;display:grid;place-items:center;font-size:calc(var(--n)*.48);background:#fff;border:calc(var(--n)*.07) solid var(--blue);box-shadow:0 4px 10px rgba(29,43,54,.25);transition:transform .2s;position:relative}
+.node-num{position:absolute;top:-14%;left:-14%;width:42%;height:42%;border-radius:50%;background:var(--blue);color:#fff;font-size:calc(var(--n)*.24);display:grid;place-items:center;border:2px solid #fff}
+.node-badge{position:absolute;bottom:-10%;right:-14%;font-size:calc(var(--n)*.3);line-height:1}
+.node-label{position:relative;z-index:1;background:#fff;border-radius:10px;padding:1px calc(var(--n)*.16);font-size:clamp(11px,1.5cqw,15px);line-height:1.4;white-space:nowrap;box-shadow:0 2px 6px rgba(29,43,54,.18)}
+.node-label small{display:block;font-size:clamp(9px,1.1cqw,12px);color:var(--ink-soft);text-align:center;line-height:1.2;margin-bottom:2px}
+.node-button:hover .node-core,.node-button:focus-visible .node-core{transform:translateY(-4px) scale(1.06)}
+.node-button:focus-visible{outline:3px solid var(--blue-dark);outline-offset:4px;border-radius:14px}
+.map-node.current .node-core{border-color:var(--yellow);background:var(--yellow-soft)}
+.map-node.current .node-core:before{content:"";position:absolute;inset:-14%;border-radius:50%;border:calc(var(--n)*.06) solid var(--yellow);animation:pulse 1.6s ease-out infinite}
+.map-node.current .node-num{background:#e0a000}
+.map-node.done .node-core{border-color:var(--green);background:var(--green-soft)}
+.map-node.done .node-num{background:var(--green)}
+.map-node.locked .node-core{border-color:var(--grey);background:#eef1f3;filter:grayscale(1);opacity:.75}
+.map-node.locked .node-num{background:var(--grey)}
+.map-node.locked .node-button{cursor:not-allowed}
+.map-node.selected .node-label{background:var(--ink);color:#fff}
+.map-node.selected .node-label small{color:#d5dee5}
+.map-node.shake{animation:shake .35s ease}
+@keyframes pulse{0%{transform:scale(.9);opacity:1}100%{transform:scale(1.2);opacity:0}}
+@keyframes shake{25%{translate:calc(-50% - 6px) -50%}75%{translate:calc(-50% + 6px) -50%}}
+
+.legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:14px;color:var(--ink-soft);font-weight:600}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:16px;height:16px;border-radius:50%;display:block;border:3px solid var(--grey);background:#eef1f3}
+.legend .is-current i{border-color:var(--yellow);background:var(--yellow-soft)}
+.legend .is-done i{border-color:var(--green);background:var(--green-soft)}
+.legend .is-pin i{width:12px;height:12px;border:2px solid #fff;background:#e2553f;box-shadow:0 0 0 1px #e2553f}
+
+.toast{position:fixed;left:50%;bottom:28px;z-index:120;translate:-50% 20px;padding:12px 20px;border-radius:999px;color:#fff;background:var(--ink);font-size:16px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;translate:-50% 0}
+
+/* 오른쪽 임무 패널 */
+.quest-panel{padding:22px 24px 24px;background:var(--card);border-left:3px solid var(--line);display:flex;flex-direction:column;gap:14px;min-height:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border-radius:999px;font-size:14px;font-weight:700;background:#e8f1f7;color:var(--blue-dark)}
+.chip.step{background:var(--blue);color:#fff}
+.chip.topic{background:#fdeee0;color:#a35512}
+.panel-title{margin:0;font-family:var(--title);font-weight:400;font-size:30px;line-height:1.25}
+.npc{display:flex;gap:12px;align-items:flex-start}
+.avatar{flex:none;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:34px;background:var(--yellow-soft);border:3px solid var(--yellow)}
+.npc-name{font-weight:800;font-size:17px}
+.npc-name span{font-weight:600;font-size:14px;color:var(--ink-soft);margin-left:4px}
+.bubble{position:relative;margin-top:6px;background:#f2f7fa;border:2px solid var(--line);border-radius:4px 16px 16px 16px;padding:10px 14px;font-size:16px;line-height:1.6}
+.objective{background:var(--yellow-soft);border:2px solid #f2d27a;border-radius:16px;padding:12px 16px}
+.objective h3{margin:0 0 4px;font-size:16px;font-weight:800;color:#8a6200}
+.objective p{margin:0;font-size:16px;line-height:1.6}
+.panel-actions{margin-top:auto;display:grid;gap:8px}
+.enter{width:100%;border:0;border-radius:16px;padding:16px 20px;cursor:pointer;background:var(--blue);color:#fff;font-size:19px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 0 var(--blue-dark);transition:transform .15s}
+.enter:hover{transform:translateY(-2px)}
+.enter:active{transform:translateY(2px);box-shadow:0 2px 0 var(--blue-dark)}
+.enter:disabled{background:var(--grey);box-shadow:none;cursor:not-allowed;transform:none}
+.enter.done{background:var(--green);box-shadow:0 4px 0 #22845a}
+.locked-note{margin:0;text-align:center;color:var(--ink-soft);font-size:14px}
+.finale{background:var(--green-soft);border:2px solid #9ad9b9;border-radius:16px;padding:14px 16px}
+.finale h3{margin:0 0 4px;font-family:var(--title);font-weight:400;font-size:22px;color:#1d7a50}
+.finale p{margin:0;font-size:15px}
+.teacher-note{margin:0;font-size:12px;color:#8b98a2;text-align:center}
+
+/* 임무 창 */
+dialog{width:min(640px,calc(100% - 24px));max-height:calc(100svh - 24px);border:0;border-radius:22px;padding:0;color:var(--ink);background:#fff;box-shadow:0 22px 60px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(20,40,55,.55)}
+.dialog-inner{padding:18px 24px 16px}
+.dialog-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+.dialog-head h2{margin:4px 0 0;font-family:var(--title);font-weight:400;font-size:26px;line-height:1.25}
+.close{flex:none;border:2px solid var(--line);background:#fff;width:42px;height:42px;border-radius:50%;cursor:pointer;font-size:22px;color:var(--ink-soft)}
+.close:hover{background:#f2f7fa}
+.step-box{margin-top:12px;border:2px solid var(--line);border-radius:18px;padding:12px 16px}
+.step-box h3{margin:0 0 8px;display:flex;align-items:center;gap:8px;font-size:17px;font-weight:800}
+.step-box h3 b{width:28px;height:28px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:14px;flex:none}
+.talk{display:flex;align-items:center;justify-content:center;gap:8px;border-radius:14px;padding:12px;text-decoration:none;font-weight:800;font-size:18px;background:var(--blue);color:#fff;box-shadow:0 4px 0 var(--blue-dark)}
+.talk:hover{filter:brightness(1.06)}
+.q-title{margin:10px 0 6px;font-size:15px;font-weight:700;color:var(--ink-soft)}
+.questions{display:grid;gap:6px}
+.q{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;border:2px solid var(--line);background:#f7fafc;border-radius:12px;padding:6px 12px;cursor:pointer;font-size:15px;color:var(--ink)}
+.q:hover{border-color:var(--blue);background:#eef6fb}
+.q span.copy{flex:none;font-size:13px;font-weight:700;color:var(--blue)}
+.checks{display:grid;gap:6px}
+.check{display:flex;align-items:center;gap:10px;padding:6px 12px;border-radius:12px;background:#f7fafc;cursor:pointer;font-size:16px}
+.check input{width:22px;height:22px;accent-color:var(--green);flex:none}
+.check:has(input:checked){background:var(--green-soft)}
+.sheet-hint{margin:6px 0 0;font-size:14px;color:var(--ink-soft)}
+.complete{margin-top:14px;width:100%;border:0;border-radius:16px;padding:15px;font-size:19px;font-weight:800;cursor:pointer;background:var(--yellow);color:var(--ink);box-shadow:0 4px 0 #d8a514}
+.complete:disabled{background:#e6eaed;color:#8b98a2;box-shadow:none;cursor:not-allowed}
+.complete-hint{margin:6px 0 0;text-align:center;font-size:14px;color:var(--ink-soft)}
+
+/* 보상 연출 */
+.celebrate{position:fixed;inset:0;z-index:99;pointer-events:none;display:none;place-items:center;background:rgba(255,255,255,.35)}
+.celebrate.show{display:grid}
+.reward{width:220px;height:220px;border-radius:50%;background:var(--yellow);border:8px solid #fff;box-shadow:0 0 0 6px var(--yellow),0 20px 50px rgba(0,0,0,.25);display:grid;place-items:center;text-align:center;font-family:var(--title);font-size:26px;line-height:1.25;color:var(--ink);animation:reward 1.3s ease both}
+.reward span{display:block;font-size:56px}
+@keyframes reward{0%{transform:scale(.2) rotate(-30deg);opacity:0}30%{transform:scale(1.1) rotate(4deg);opacity:1}80%{transform:scale(1);opacity:1}100%{transform:scale(1);opacity:0}}
+
+@media(max-width:1000px){
+  main{display:block}
+  .quest-panel{border-left:0;border-top:3px solid var(--line)}
+  .map-frame{container-type:inline-size;min-height:0}
+  .map-box{width:100%}
+}
+@media(max-width:600px){
+  body{font-size:16px}
+  .topbar{flex-wrap:wrap;padding:10px 16px}
+  .progress-label{display:none}
+  .fragment{width:22px;height:22px;font-size:13px}
+  .map-stage{padding:14px 16px}
+  .howto li{font-size:14px;padding:6px 10px}
+  .node-label small{display:none}
+  .quest-panel{padding:18px 16px}
+  .panel-title{font-size:25px}
+  .dialog-inner{padding:20px 16px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body><div class="app">
-<header class="topbar"><div class="brand"><div class="brand-mark" aria-hidden="true"></div><div><div class="brand-eyebrow">GLOBAL FIELD MISSION</div><div class="brand-title">지구촌 NPC 구조대</div></div></div><div class="hud"><div><div class="hud-label">수집한 세계 조각</div><div class="fragments" id="fragments" aria-label="진행도"></div></div><button class="reset" id="resetBtn" type="button">기록 초기화</button></div></header>
-<main><section class="map-stage" aria-label="세계 탐험 지도"><div class="map-kicker"><small>CHAPTER 01 · LISTEN FIRST</small><h1>목소리가 있는 세계</h1><p>빛나는 신호를 따라가 NPC의 이야기를 듣고 세계 조각을 모으세요.</p></div><div class="map-wrap">
-<svg class="world-map" viewBox="0 0 1000 650" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="#b3d1c7" stroke-width=".45"/></pattern></defs><rect width="1000" height="650" fill="#09232b"/><rect class="ocean-grid" width="1000" height="650" fill="url(#grid)"/><g class="land-shadow"><path d="M80 251l38-62 82-34 93 21 53 56-15 58-62 31-40 77-74 16-52-54z"/><path d="M304 414l48 23 33 61-17 108-43 21-33-89z"/><path d="M433 220l53-45 77-14 57 27 114-5 104 43 74 74-34 51-100 18-63 51-58-11-35-63-74-25-40 24-57-39z"/><path d="M490 349l63-6 48 50 4 89-48 107-53-31-41-105z"/><path d="M793 462l74-24 59 35 3 58-76 28-52-41z"/></g><g><path class="land" d="M80 244l38-62 82-34 93 21 53 56-15 58-62 31-40 77-74 16-52-54z"/><path class="land" d="M304 407l48 23 33 61-17 108-43 21-33-89z"/><path class="land" d="M433 213l53-45 77-14 57 27 114-5 104 43 74 74-34 51-100 18-63 51-58-11-35-63-74-25-40 24-57-39z"/><path class="land" d="M490 342l63-6 48 50 4 89-48 107-53-31-41-105z"/><path class="land" d="M793 455l74-24 59 35 3 58-76 28-52-41z"/></g><g><path class="contour" d="M111 240c45-54 127-72 193-24M118 280c70-44 145-51 204-18M463 230c104-43 254-47 365 26M505 278c102-29 217-14 300 36M482 381c48 9 94 52 97 109M809 483c38-27 75-26 104 1"/><path class="contour" d="M97 325c65-21 138-8 184 34M470 315c79-7 160 14 221 68M317 456c38 34 51 79 34 128M823 518c30-16 59-13 82 5"/></g><g id="routeLayer"></g></svg><div id="nodes"></div></div>
-<div class="legend"><span class="is-current"><i></i>현재 임무</span><span class="is-done"><i></i>탐험 완료</span><span><i></i>잠김</span></div><div class="toast" id="toast" role="status"></div></section>
-<aside class="quest-panel" aria-live="polite"><div class="panel-index" id="panelIndex">ACTIVE QUEST · 01</div><div class="panel-place" id="panelPlace"></div><h2 class="panel-title" id="panelTitle"></h2><div class="rule"></div><div class="npc-line"><div class="portrait" id="portrait"></div><div><strong id="npcName"></strong><span id="npcRole"></span></div></div><p class="brief" id="brief"></p><div class="objective"><small>MISSION OBJECTIVE</small><p id="objective"></p></div><div class="panel-actions"><button class="enter" id="enterBtn" type="button"><span>임무 살펴보기</span><span class="arrow">→</span></button><p class="egpt-note">대화 버튼은 완성한 E-GPT 챗봇 링크와 연결됩니다.</p></div></aside></main></div>
-<dialog id="missionDialog"><div class="dialog-inner"><div class="dialog-head"><div><small id="dialogTopic"></small><h2 id="dialogTitle"></h2></div><button class="close" id="closeDialog" aria-label="닫기">×</button></div><div class="dialog-copy" id="dialogIntro"></div><p class="dialog-mission" id="dialogMission"></p><div class="dialog-actions"><a class="talk" id="talkBtn" href="#">NPC와 대화 시작</a><button class="complete" id="completeBtn" type="button">대화 후 세계 조각 받기</button></div><div class="credits">정답을 바로 주기보다, 질문으로 생각을 넓히는 탐험입니다.</div></div></dialog><div class="celebrate" id="celebrate"><div class="reward">WORLD<br>FRAGMENT</div></div>
+<header class="topbar">
+  <div class="brand"><span class="globe" aria-hidden="true">🌏</span>지구촌 NPC 구조대</div>
+  <div class="hud">
+    <div class="progress"><span class="progress-label" id="progressLabel">세계 조각 0 / 5</span><div class="fragments" id="fragments" aria-hidden="true"></div></div>
+    <button class="reset" id="resetBtn" type="button">처음부터 다시</button>
+  </div>
+</header>
+<main>
+  <section class="map-stage" aria-label="세계 탐험 지도">
+    <ol class="howto">
+      <li><b>1</b><span>지도에서 <strong style="color:#c98a00">노란 곳</strong>을 눌러요</span></li>
+      <li><b>2</b><span>그곳에 사는 인물과 대화해요</span></li>
+      <li><b>3</b><span>생각을 정리하고 세계 조각을 모아요</span></li>
+    </ol>
+    <div class="map-frame"><div class="map-box" id="mapBox">
+      <div class="map-clip"><svg class="world-map" id="worldMap" viewBox="0 0 1000 558" aria-hidden="true"></svg></div>
+      <div id="nodes"></div>
+    </div></div>
+    <div class="legend"><span class="is-current"><i></i>지금 갈 곳</span><span class="is-done"><i></i>다녀온 곳</span><span><i></i>아직 잠긴 곳</span><span class="is-pin"><i></i>실제 위치</span></div>
+  </section>
+  <aside class="quest-panel" aria-live="polite">
+    <div class="chips" id="panelChips"></div>
+    <h2 class="panel-title" id="panelTitle"></h2>
+    <div class="npc">
+      <div class="avatar" id="avatar" aria-hidden="true"></div>
+      <div><div class="npc-name" id="npcName"></div><div class="bubble" id="npcSay"></div></div>
+    </div>
+    <div class="objective"><h3>🎯 나의 임무</h3><p id="objective"></p></div>
+    <div class="finale" id="finale" hidden><h3>🎉 다섯 명의 목소리를 모두 들었어요!</h3><p>이제 우리 모둠만의 NPC를 만들어 볼 차례예요. 어떤 지구촌 문제를, 누구의 목소리로 들려주고 싶나요?</p></div>
+    <div class="panel-actions">
+      <button class="enter" id="enterBtn" type="button"></button>
+      <p class="locked-note" id="lockedNote" hidden>🔒 앞의 인물을 먼저 만나야 열려요.</p>
+      <p class="teacher-note" id="teacherNote" hidden></p>
+    </div>
+  </aside>
+</main></div>
+
+<dialog id="missionDialog" aria-labelledby="dialogTitle"><div class="dialog-inner">
+  <div class="dialog-head"><div><div class="chips" id="dialogChips"></div><h2 id="dialogTitle"></h2></div><button class="close" id="closeDialog" type="button" aria-label="닫기">×</button></div>
+  <div class="step-box">
+    <h3><b>1</b>인물과 대화하기</h3>
+    <a class="talk" id="talkBtn" href="#" target="_blank" rel="noopener"></a>
+    <p class="q-title">💡 이런 질문을 해 보세요 <span style="font-weight:500">(누르면 복사돼요)</span></p>
+    <div class="questions" id="questions"></div>
+  </div>
+  <div class="step-box">
+    <h3><b>2</b>대화한 뒤 생각 정리하기</h3>
+    <div class="checks" id="checks"></div>
+    <p class="sheet-hint">✏️ 생각한 내용은 <strong>관점 공감 기록지</strong>에 적어요.</p>
+  </div>
+  <button class="complete" id="completeBtn" type="button">🧩 세계 조각 받기</button>
+  <p class="complete-hint" id="completeHint">세 가지를 모두 체크하면 받을 수 있어요.</p>
+</div></dialog>
+<div class="celebrate" id="celebrate"><div class="reward"><div><span>🧩</span>세계 조각<br>획득!</div></div></div>
+<div class="toast" id="toast" role="status"></div>
+
 <script>
 // E-GPT 챗봇을 만든 뒤 아래 botUrl 다섯 곳에 학생용 링크를 붙여 넣으세요.
+// lon/lat: 실제 위치(빨간 점), dx/dy: 지도 위에서 버튼을 옮겨 놓을 거리(겹침 방지)
 const missions=[
-{place:"투발루",name:"테아",role:"섬마을 주민",initials:"T",icon:"wave",x:86,y:65,topic:"기후위기 · 해수면 상승",title:"사라지는 마을의 기억",intro:"바닷물이 생활 공간 가까이 들어오면서 집, 식수, 생계와 마을의 미래를 함께 고민하고 있어요.",mission:"테아가 가장 지키고 싶은 것을 찾아보고, 주민·정부·국제사회가 함께할 해결책을 제안하세요.",botUrl:""},
-{place:"말리",name:"아마두",role:"농부",initials:"A",icon:"sun",x:45,y:48,topic:"가뭄 · 식량 · 빈곤",title:"메마른 들판의 선택",intro:"비가 불규칙해지면서 농작물 수확과 가족의 식량, 소득이 함께 영향을 받고 있어요.",mission:"당장 필요한 지원과 오래 지속될 해결책을 나누고, 제한된 자원의 우선순위를 정하세요.",botUrl:""},
-{place:"미얀마",name:"민",role:"청소년",initials:"M",icon:"bird",x:72,y:43,topic:"분쟁 · 평화 · 인권",title:"멈춰 버린 교실",intro:"분쟁 때문에 안전한 일상과 학교 수업이 불안정한 상황에서도 계속 배우고 싶은 청소년이에요.",mission:"민의 안전과 학습권을 지키면서 청소년의 의견까지 반영하는 지원 방법을 찾아보세요.",botUrl:""},
-{place:"방글라데시",name:"리마",role:"지역 주민",initials:"R",icon:"home",x:68,y:51,topic:"홍수 · 기후이주",title:"떠날까, 남을까",intro:"반복되는 홍수와 환경 변화로 지금 사는 곳에 남을지, 새로운 곳으로 이동할지 가족과 고민하고 있어요.",mission:"이동할 때 얻는 것과 잃는 것을 비교하고, 남는 사람과 이동하는 사람 모두를 위한 방법을 제안하세요.",botUrl:""},
-{place:"국제구호본부",name:"수현",role:"구호 활동가",initials:"S",icon:"compass",x:58,y:24,topic:"국제협력 · 공정한 배분",title:"마지막 10점의 예산",intro:"여러 지역 주민의 목소리를 듣고 긴급지원과 장기 해결 사이에서 한정된 예산을 배분하는 활동가예요.",mission:"10점의 예산을 공정하게 나누고 주민·정부·국제기구·NGO가 맡을 역할을 결정하세요.",botUrl:""}];
-const icons={wave:'<svg viewBox="0 0 24 24"><path d="M3 15c2.2-2 4.3-2 6.5 0s4.3 2 6.5 0 4.3-2 5 0M4 10c1.7-1.6 3.5-1.6 5.2 0s3.5 1.6 5.2 0 3.5-1.6 5.2 0"/></svg>',sun:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3M5 5l2.1 2.1M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg>',bird:'<svg viewBox="0 0 24 24"><path d="M3 15c3-4 6-5 9-2 2-4 5-5 9-3-3 1-5 4-6 7-4-2-8-2-12-2z"/></svg>',home:'<svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9H4zM9 20v-6h6v6"/></svg>',compass:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z"/></svg>'};
-const storageKey="globalNpcRescueProgressV2";let completed=new Set(JSON.parse(localStorage.getItem(storageKey)||"[]"));let selected=Math.min(nextUnlocked(),missions.length-1);const $=id=>document.getElementById(id);
-function nextUnlocked(){for(let i=0;i<missions.length;i++)if(!completed.has(i))return i;return missions.length}function stateOf(i){const n=nextUnlocked();return completed.has(i)?"done":i===n?"current":i>n?"locked":"open"}function routePoint(m){return[m.x*10,m.y*6.5]}
-function renderRoutes(){const layer=$("routeLayer");layer.innerHTML="";for(let i=0;i<missions.length-1;i++){const[x1,y1]=routePoint(missions[i]),[x2,y2]=routePoint(missions[i+1]),p=document.createElementNS("http://www.w3.org/2000/svg","path"),cx=(x1+x2)/2,bend=i%2?35:-35;p.setAttribute("d",`M${x1} ${y1} Q${cx} ${(y1+y2)/2+bend} ${x2} ${y2}`);p.setAttribute("class",`route ${completed.has(i)?"reached":""}`);layer.appendChild(p)}}
-function renderNodes(){$("nodes").innerHTML=missions.map((m,i)=>{const state=stateOf(i),status=state==="done"?"탐험 완료":state==="current"?"신호 수신 중":state==="locked"?"아직 잠김":"탐험 가능";return`<div class="map-node ${state}" data-index="${i}" style="left:${m.x}%;top:${m.y}%"><button class="node-button" type="button" aria-label="${m.place} ${status}" ${state==="locked"?'aria-disabled="true"':''}><span class="node-core">${icons[m.icon]}</span><span class="node-label"><strong>${m.place}</strong><span>${status}</span></span></button></div>`}).join("");document.querySelectorAll(".node-button").forEach(btn=>btn.addEventListener("click",()=>selectNode(Number(btn.parentElement.dataset.index))))}
-function renderPanel(){const m=missions[selected],state=stateOf(selected);$("panelIndex").textContent=`${state==="done"?"ARCHIVED QUEST":"ACTIVE QUEST"} · ${String(selected+1).padStart(2,"0")}`;$("panelPlace").textContent=`${m.place} / ${m.topic}`;$("panelTitle").textContent=m.title;$("portrait").textContent=m.initials;$("npcName").textContent=m.name;$("npcRole").textContent=m.role;$("brief").textContent=m.intro;$("objective").textContent=m.mission;$("enterBtn").disabled=state==="locked";$("enterBtn").firstElementChild.textContent=state==="done"?"기록 다시 보기":"임무 살펴보기"}
-function renderHud(){$("fragments").innerHTML=missions.map((_,i)=>`<i class="fragment ${completed.has(i)?"on":""}"></i>`).join("")}function render(){renderRoutes();renderNodes();renderPanel();renderHud()}
-function selectNode(i){const node=document.querySelector(`.map-node[data-index="${i}"]`);if(stateOf(i)==="locked"){node.classList.remove("shake");void node.offsetWidth;node.classList.add("shake");showToast("앞선 지역의 목소리를 먼저 들어주세요.");return}selected=i;renderPanel()}
-function openMission(){const m=missions[selected];if(stateOf(selected)==="locked")return;$("dialogTopic").textContent=m.topic;$("dialogTitle").textContent=`${m.name}의 이야기`;$("dialogIntro").textContent=m.intro;$("dialogMission").textContent=m.mission;const talk=$("talkBtn");talk.href=m.botUrl||"https://egpt.kr/";talk.target="_blank";talk.rel="noopener";talk.textContent=m.botUrl?"NPC와 대화 시작":"E-GPT에서 챗봇 연결하기";$("completeBtn").textContent=completed.has(selected)?"이미 받은 세계 조각":"대화 후 세계 조각 받기";$("completeBtn").disabled=completed.has(selected);$("missionDialog").showModal()}
-function completeMission(){if(completed.has(selected))return;completed.add(selected);localStorage.setItem(storageKey,JSON.stringify([...completed]));$("missionDialog").close();$("celebrate").classList.add("show");setTimeout(()=>$("celebrate").classList.remove("show"),950);setTimeout(()=>{selected=Math.min(nextUnlocked(),missions.length-1);render();showToast(completed.size===missions.length?"모든 목소리를 모았습니다.":"새로운 신호가 지도에 나타났습니다.")},480)}let toastTimer;function showToast(message){clearTimeout(toastTimer);$("toast").textContent=message;$("toast").classList.add("show");toastTimer=setTimeout(()=>$("toast").classList.remove("show"),2200)}
-$("enterBtn").addEventListener("click",openMission);$("closeDialog").addEventListener("click",()=>$("missionDialog").close());$("missionDialog").addEventListener("click",e=>{if(e.target===$("missionDialog"))$("missionDialog").close()});$("completeBtn").addEventListener("click",completeMission);$("resetBtn").addEventListener("click",()=>{if(confirm("모든 탐험 기록을 초기화할까요?")){completed.clear();localStorage.removeItem(storageKey);selected=0;render()}});render();
+{place:"투발루",region:"오세아니아",name:"테아",role:"섬마을 주민",emoji:"🌊",lon:179,lat:-8,dx:-40,dy:-10,
+ topic:"기후 위기 · 바닷물 높아짐",title:"바닷물이 가까워진 우리 마을",
+ say:"안녕! 나는 투발루의 작은 섬에 사는 테아야. 요즘 바닷물이 자꾸 마을 가까이 들어와서 걱정이 많아.",
+ mission:"테아가 가장 지키고 싶은 것을 알아보고, 마을을 지킬 방법을 함께 생각해 보세요.",
+ questions:["바닷물이 들어오면 생활이 어떻게 달라져?","마을 사람들은 어떤 노력을 하고 있어?","다른 나라 사람들이 도울 수 있는 일은 뭐야?"],botUrl:""},
+{place:"말리",region:"아프리카",name:"아마두",role:"농부",emoji:"🌾",lon:-2,lat:17,dx:0,dy:0,
+ topic:"가뭄 · 식량 부족 · 가난",title:"비가 오지 않는 들판",
+ say:"나는 말리에서 농사를 짓는 아마두란다. 비가 제때 오지 않아서 올해 농사가 무척 힘들구나.",
+ mission:"지금 당장 필요한 도움과 오래도록 도움이 될 방법을 나누어 생각해 보세요.",
+ questions:["비가 안 오면 가족의 생활은 어떻게 돼요?","지금 가장 필요한 것은 무엇인가요?","오랫동안 농사를 지으려면 무엇이 필요해요?"],botUrl:""},
+{place:"미얀마",region:"아시아",name:"민",role:"청소년",emoji:"📚",lon:96,lat:21,dx:58,dy:46,
+ topic:"분쟁 · 평화 · 인권",title:"멈춰 버린 교실",
+ say:"나는 미얀마에 사는 민이야. 다툼(분쟁) 때문에 학교에 못 가는 날이 많아졌지만, 나는 계속 공부하고 싶어.",
+ mission:"민이 안전하게 지내면서 계속 배울 수 있는 방법을 찾아보세요.",
+ questions:["학교에 못 가면 어떤 점이 가장 힘들어?","어린이가 꼭 누려야 할 권리는 뭘까?","계속 배우려면 어떤 도움이 필요해?"],botUrl:""},
+{place:"방글라데시",region:"아시아",name:"리마",role:"마을 주민",emoji:"🏠",lon:90,lat:24,dx:-50,dy:-58,
+ topic:"홍수 · 살던 곳을 떠나는 사람들",title:"떠날까, 남을까",
+ say:"나는 방글라데시에 사는 리마야. 홍수가 자주 나서 이곳에 계속 살지, 다른 곳으로 옮길지 가족과 고민하고 있어.",
+ mission:"살던 곳을 떠날 때 얻는 것과 잃는 것을 비교하고, 리마 가족에게 알맞은 방법을 제안해 보세요.",
+ questions:["홍수가 나면 어떤 일이 생겨?","다른 곳으로 옮기면 무엇이 달라져?","남는 사람들을 도울 방법은 뭐가 있을까?"],botUrl:""},
+{place:"국제구호본부",region:"스위스 제네바",name:"수현",role:"구호 활동가",emoji:"🤝",lon:6,lat:46,dx:-56,dy:-34,
+ topic:"국제 협력 · 공평하게 나누기",title:"10점으로 누구를 도울까?",
+ say:"나는 여러 나라 사람들을 돕는 구호 활동가 수현이야. 도울 수 있는 예산은 10점뿐인데, 도움이 필요한 곳은 많아. 함께 정해 줄래?",
+ mission:"앞에서 만난 인물들을 떠올리며 10점을 공평하게 나누고, 개인·나라·국제기구·NGO가 할 일을 정해 보세요.",
+ questions:["급한 도움과 오래가는 도움 중 무엇이 먼저일까요?","국제기구와 NGO는 어떤 일을 해요?","초등학생도 할 수 있는 일은 무엇일까요?"],
+ checks:["개인·나라·국제기구·NGO가 하는 일을 말할 수 있어요","10점을 그렇게 나눈 까닭을 말할 수 있어요","우리가 실천할 수 있는 일을 하나 정했어요"],botUrl:""}];
+const defaultChecks=["이 인물이 겪는 지구촌 문제를 말할 수 있어요","문제가 생긴 까닭(원인)을 말할 수 있어요","내가 생각한 해결 방법을 말할 수 있어요"];
+
+// 간단한 세계 지도 (경도, 위도)
+const W=1000,H=558,LON0=-25,LON1=190,LAT0=72,LAT1=-48;
+const proj=(lon,lat)=>[(lon-LON0)/(LON1-LON0)*W,(LAT0-lat)/(LAT0-LAT1)*H];
+const LANDS=[
+[[-17,21],[-16,28],[-10,35],[-5,36],[10,37],[11,33],[20,32],[25,31],[32,31],[34,28],[38,18],[43,12],[51,12],[48,5],[40,-3],[40,-10],[35,-20],[33,-26],[28,-33],[20,-35],[18,-30],[14,-23],[12,-17],[13,-8],[9,-1],[9,4],[4,6],[-3,5],[-8,4],[-13,8],[-17,14]],
+[[-9,43],[-9,37],[-5,36],[0,38],[3,42],[8,44],[12,44],[16,40],[18,40],[13,45],[19,42],[24,38],[26,41],[29,41],[36,36],[35,33],[34,31],[35,28],[39,22],[43,13],[45,13],[52,16],[56,18],[59,22],[56,26],[52,24],[48,29],[50,30],[57,26],[62,25],[67,24],[70,21],[73,16],[77,8],[80,13],[80,15],[87,21],[90,22],[92,21],[94,17],[97,16],[98,8],[100,4],[104,1],[103,10],[106,9],[109,12],[108,17],[106,20],[110,21],[117,23],[121,28],[122,31],[119,35],[122,37],[118,39],[121,41],[125,40],[126,37],[129,35],[129,38],[130,43],[135,44],[141,51],[141,55],[135,55],[143,59],[156,61],[163,62],[160,57],[163,57],[170,60],[180,65],[180,69],[170,70],[160,70],[140,72],[130,71],[113,74],[100,77],[90,75],[80,73],[70,73],[66,69],[60,69],[50,68],[44,68],[40,66],[32,70],[25,71],[15,68],[10,63],[5,62],[5,58],[10,59],[12,56],[10,54],[8,54],[4,52],[2,51],[-2,48],[-5,48],[-1,46],[-2,43]],
+[[-5,50],[1,51],[2,53],[-2,56],[-3,58],[-6,58],[-5,55],[-3,54],[-5,52]],
+[[-24,64],[-14,64],[-14,66],[-22,66]],
+[[130,31],[132,34],[136,34],[140,35],[141,38],[142,42],[145,44],[141,45],[140,41],[139,38],[136,36],[132,35]],
+[[44,-25],[47,-25],[50,-15],[49,-12],[44,-17]],
+[[80,6],[82,7],[81,9],[80,9]],
+[[114,-22],[114,-34],[118,-35],[124,-33],[131,-31],[137,-35],[140,-38],[147,-39],[150,-37],[153,-31],[153,-25],[146,-19],[145,-15],[142,-11],[141,-17],[136,-12],[131,-11],[127,-14],[122,-18]],
+[[172,-35],[175,-37],[178,-38],[175,-41],[171,-44],[167,-46],[170,-42],[174,-39]],
+[[95,5],[98,4],[104,-2],[106,-6],[101,-3],[96,3]],
+[[105,-6],[114,-7],[115,-8],[106,-7]],
+[[109,1],[111,2],[116,6],[119,5],[118,1],[116,-4],[111,-3],[109,-1]],
+[[131,-1],[138,-2],[145,-5],[150,-10],[143,-9],[138,-8],[134,-4]],
+[[120,18],[122,18],[124,12],[126,7],[122,7],[121,13]]];
+const LABELS=[["아시아",95,50,"map-text"],["유럽",30,58,"map-text"],["아프리카",20,3,"map-text"],["오세아니아",133,-25,"map-text"],["태평양",160,20,"sea-text"],["인도양",75,-22,"sea-text"],["대서양",-14,-22,"sea-text"]];
+
+const icons={done:"✅",locked:"🔒",current:""};
+const storageKey="globalNpcRescueProgressV2";
+const store={get(){try{return JSON.parse(localStorage.getItem(storageKey)||"[]")}catch{return[]}},set(v){try{localStorage.setItem(storageKey,JSON.stringify(v))}catch{}},clear(){try{localStorage.removeItem(storageKey)}catch{}}};
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const loadProgress=()=>{const v=store.get();return new Set(Array.isArray(v)?v.filter(n=>Number.isInteger(n)&&n>=0&&n<missions.length):[])};
+let completed=loadProgress();
+let selected=Math.min(nextUnlocked(),missions.length-1);
+const $=id=>document.getElementById(id);
+const hasBatchim=w=>{const c=w.charCodeAt(w.length-1)-0xac00;return c>=0&&c<=11171&&c%28!==0};
+const josa=(w,a,b)=>w+(hasBatchim(w)?a:b);
+
+function nextUnlocked(){for(let i=0;i<missions.length;i++)if(!completed.has(i))return i;return missions.length}
+function stateOf(i){const n=nextUnlocked();return completed.has(i)?"done":i===n?"current":"locked"}
+function nodePoint(m){const[x,y]=proj(m.lon,m.lat);return[x+m.dx,y+m.dy]}
+
+function drawMap(){
+  const svg=$("worldMap");let s=`<rect width="${W}" height="${H}" fill="var(--ocean)"/>`;
+  for(let lon=0;lon<=180;lon+=30){const[x]=proj(lon,0);s+=`<line class="grat" x1="${x}" y1="0" x2="${x}" y2="${H}"/>`}
+  for(let lat=-30;lat<=60;lat+=30){if(lat===0)continue;const[,y]=proj(0,lat);s+=`<line class="grat" x1="0" y1="${y}" x2="${W}" y2="${y}"/>`}
+  const[,ey]=proj(0,0);s+=`<line class="equator" x1="0" y1="${ey}" x2="${W}" y2="${ey}"/><text class="small-text" x="${W-8}" y="${ey-6}" text-anchor="end">적도</text>`;
+  s+=LANDS.map(p=>`<path class="land" d="M${p.map(([lo,la])=>proj(lo,la).map(n=>n.toFixed(1)).join(" ")).join("L")}Z"/>`).join("");
+  s+=LABELS.map(([t,lo,la,c])=>{const[x,y]=proj(lo,la);return`<text class="${c}" x="${x}" y="${y}">${t}</text>`}).join("");
+  s+=`<g id="routeLayer"></g><g id="pinLayer"></g>`;svg.innerHTML=s;
+}
+function renderRoutes(){
+  let s="";for(let i=0;i<missions.length-1;i++){if(!completed.has(i))continue;const[x1,y1]=nodePoint(missions[i]),[x2,y2]=nodePoint(missions[i+1]),bend=i%2?40:-40;s+=`<path class="route ${completed.has(i)?"reached":""}" d="M${x1} ${y1} Q${(x1+x2)/2} ${(y1+y2)/2+bend} ${x2} ${y2}"/>`}
+  $("routeLayer").innerHTML=s;
+  $("pinLayer").innerHTML=missions.map(m=>{const[x,y]=proj(m.lon,m.lat),[nx,ny]=nodePoint(m);return(m.dx||m.dy?`<line class="leader" x1="${x}" y1="${y}" x2="${nx}" y2="${ny}"/>`:"")+`<circle class="pin-dot" cx="${x}" cy="${y}" r="5"/>`}).join("");
+}
+function renderNodes(){
+  $("nodes").innerHTML=missions.map((m,i)=>{const st=stateOf(i),[x,y]=nodePoint(m),status=st==="done"?"다녀왔어요":st==="current"?"지금 갈 곳":"잠겨 있어요";
+    return`<div class="map-node ${st} ${i===selected?"selected":""}" data-index="${i}" style="left:${x/W*100}%;top:${y/H*100}%"><button class="node-button" type="button" aria-label="${i+1}번 ${m.place}, ${status}" ${st==="locked"?'aria-disabled="true"':""}><span class="node-core"><span class="node-num">${i+1}</span>${m.emoji}<span class="node-badge">${icons[st]}</span></span><span class="node-label"><small>${status}</small>${m.place}</span></button></div>`}).join("");
+  document.querySelectorAll(".node-button").forEach(b=>b.addEventListener("click",()=>selectNode(Number(b.parentElement.dataset.index))));
+}
+function renderPanel(){
+  const m=missions[selected],st=stateOf(selected),all=completed.size===missions.length;
+  $("panelChips").innerHTML=`<span class="chip step">임무 ${selected+1} / ${missions.length}</span><span class="chip">📍 ${m.place} · ${m.region}</span><span class="chip topic">${m.topic}</span>`;
+  $("panelTitle").textContent=m.title;$("avatar").textContent=m.emoji;
+  $("npcName").innerHTML=`${m.name}<span>${m.role}</span>`;$("npcSay").textContent=m.say;$("objective").textContent=m.mission;
+  const btn=$("enterBtn");btn.disabled=st==="locked";btn.classList.toggle("done",st==="done");
+  btn.textContent=st==="done"?`✅ ${josa(m.name,"과","와")} 나눈 이야기 다시 보기`:st==="locked"?"🔒 아직 잠겨 있어요":`${m.name} 만나러 가기 →`;
+  $("lockedNote").hidden=st!=="locked";$("finale").hidden=!all;
+  const missing=missions.filter(x=>!x.botUrl).length;
+  $("teacherNote").hidden=!missing;$("teacherNote").textContent=`※ 선생님 확인: 챗봇 링크가 ${missing}곳 비어 있어요 (index.html의 botUrl).`;
+}
+function renderHud(){
+  $("fragments").innerHTML=missions.map((_,i)=>`<i class="fragment ${completed.has(i)?"on":""}">${completed.has(i)?"🧩":""}</i>`).join("");
+  $("progressLabel").textContent=`세계 조각 ${completed.size} / ${missions.length}`;
+}
+function render(){renderRoutes();renderNodes();renderPanel();renderHud()}
+
+function selectNode(i){
+  if(stateOf(i)==="locked"){const n=document.querySelector(`.map-node[data-index="${i}"]`);n.classList.remove("shake");void n.offsetWidth;n.classList.add("shake");showToast(`🔒 ${nextUnlocked()+1}번 인물을 먼저 만나고 오세요.`);return}
+  selected=i;renderNodes();renderPanel();document.querySelector(`.map-node[data-index="${i}"] .node-button`)?.focus();
+}
+function openMission(){
+  const m=missions[selected],st=stateOf(selected);if(st==="locked")return;
+  $("dialogChips").innerHTML=`<span class="chip">📍 ${m.place}</span><span class="chip topic">${m.topic}</span>`;
+  $("dialogTitle").textContent=`${m.emoji} ${m.name}의 이야기`;
+  const talk=$("talkBtn");talk.href=m.botUrl||"https://egpt.kr/";talk.textContent=`💬 ${josa(m.name,"과","와")} 대화 시작하기`;
+  $("questions").innerHTML=m.questions.map(q=>`<button class="q" type="button"><span>${esc(q)}</span><span class="copy">복사</span></button>`).join("");
+  $("questions").querySelectorAll(".q").forEach((b,k)=>b.addEventListener("click",()=>copyQuestion(m.questions[k])));
+  const done=completed.has(selected);
+  $("checks").innerHTML=(m.checks||defaultChecks).map(c=>`<label class="check"><input type="checkbox" ${done?"checked disabled":""}><span>${esc(c)}</span></label>`).join("");
+  $("checks").querySelectorAll("input").forEach(c=>c.addEventListener("change",updateComplete));
+  updateComplete();$("missionDialog").showModal();
+}
+function updateComplete(){
+  const done=completed.has(selected),boxes=[...$("checks").querySelectorAll("input")],ok=boxes.every(b=>b.checked);
+  const b=$("completeBtn");b.disabled=done||!ok;b.textContent=done?"🧩 이미 받은 세계 조각이에요":"🧩 세계 조각 받기";
+  $("completeHint").hidden=done||ok;
+}
+function copyQuestion(q){
+  const ok=()=>showToast("📋 복사했어요! 챗봇 창에 붙여 넣으세요 (Ctrl+V)");
+  const fallback=()=>{const t=document.createElement("textarea");t.value=q;t.setAttribute("readonly","");t.style.cssText="position:fixed;opacity:0";$("missionDialog").appendChild(t);t.select();let done=false;try{done=document.execCommand("copy")}catch{}t.remove();done?ok():showToast("복사가 안 됐어요. 질문을 보고 직접 써 주세요.")};
+  if(navigator.clipboard?.writeText)navigator.clipboard.writeText(q).then(ok,fallback);else fallback();
+}
+let pending=[];
+function completeMission(){
+  if(completed.has(selected))return;completed.add(selected);store.set([...completed]);
+  $("missionDialog").close();$("celebrate").classList.add("show");
+  pending.push(setTimeout(()=>$("celebrate").classList.remove("show"),1300));
+  pending.push(setTimeout(()=>{selected=Math.min(nextUnlocked(),missions.length-1);render();showToast(completed.size===missions.length?"🎉 다섯 개의 세계 조각을 모두 모았어요!":`🗺️ ${missions[nextUnlocked()].place}에 새 신호가 나타났어요!`)},900));
+}
+let toastTimer;function showToast(msg){clearTimeout(toastTimer);const d=$("missionDialog");(d.open?d:document.body).appendChild($("toast"));$("toast").textContent=msg;$("toast").classList.add("show");toastTimer=setTimeout(()=>$("toast").classList.remove("show"),2600)}
+
+$("enterBtn").addEventListener("click",openMission);
+$("closeDialog").addEventListener("click",()=>$("missionDialog").close());
+let downOnBackdrop=false;$("missionDialog").addEventListener("mousedown",e=>{downOnBackdrop=e.target===$("missionDialog")});
+$("missionDialog").addEventListener("click",e=>{if(downOnBackdrop&&e.target===$("missionDialog"))$("missionDialog").close()});
+$("completeBtn").addEventListener("click",completeMission);
+$("resetBtn").addEventListener("click",()=>{if(confirm("모은 세계 조각이 모두 사라져요. 처음부터 다시 할까요?")){pending.forEach(clearTimeout);pending=[];$("celebrate").classList.remove("show");completed.clear();store.clear();selected=0;render()}});
+drawMap();render();
 </script></body></html>
