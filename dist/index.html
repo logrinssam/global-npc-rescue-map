@@ -60,6 +60,9 @@ main{min-height:0;display:grid;grid-template-columns:minmax(0,1fr) clamp(320px,2
 .node-button{border:0;background:none;padding:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:calc(var(--n)*.07);position:relative}
 .node-core{width:var(--n);height:var(--n);border-radius:50%;display:grid;place-items:center;font-size:calc(var(--n)*.48);background:#fff;border:calc(var(--n)*.07) solid var(--blue);box-shadow:0 4px 10px rgba(29,43,54,.25);transition:transform .2s;position:relative}
 .node-num{position:absolute;top:-14%;left:-14%;width:42%;height:42%;border-radius:50%;background:var(--blue);color:#fff;font-size:calc(var(--n)*.24);display:grid;place-items:center;border:2px solid #fff}
+.node-face{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;pointer-events:none}
+.avatar-face{width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.title-face{width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;border:2px solid var(--yellow);margin-right:4px}
 .node-badge{position:absolute;bottom:-10%;right:-14%;font-size:calc(var(--n)*.3);line-height:1}
 .node-label{position:relative;z-index:1;background:#fff;border-radius:10px;padding:1px calc(var(--n)*.16);font-size:clamp(11px,1.5cqw,15px);line-height:1.4;white-space:nowrap;box-shadow:0 2px 6px rgba(29,43,54,.18)}
 .node-label small{display:block;font-size:clamp(9px,1.1cqw,12px);color:var(--ink-soft);text-align:center;line-height:1.2;margin-bottom:2px}
@@ -97,7 +100,7 @@ main{min-height:0;display:grid;grid-template-columns:minmax(0,1fr) clamp(320px,2
 .chip.topic{background:#fdeee0;color:#a35512}
 .panel-title{margin:0;font-family:var(--title);font-weight:400;font-size:30px;line-height:1.25}
 .npc{display:flex;gap:12px;align-items:flex-start}
-.avatar{flex:none;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:34px;background:var(--yellow-soft);border:3px solid var(--yellow)}
+.avatar{flex:none;width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:34px;background:var(--yellow-soft);border:3px solid var(--yellow);overflow:hidden}
 .npc-name{font-weight:800;font-size:17px}
 .npc-name span{font-weight:600;font-size:14px;color:var(--ink-soft);margin-left:4px}
 .bubble{position:relative;margin-top:6px;background:#f2f7fa;border:2px solid var(--line);border-radius:4px 16px 16px 16px;padding:10px 14px;font-size:16px;line-height:1.6}
@@ -336,27 +339,27 @@ dialog::backdrop{background:rgba(20,40,55,.55)}
 // botUrl: E-GPT 학생용 링크 (egpt-builder.web.app, 교사 계정 logrinssam@gmail.com에서 생성, 2026-10-13)
 // lon/lat: 실제 위치(빨간 점), dx/dy: 지도 위에서 버튼을 옮겨 놓을 거리(겹침 방지)
 const missions=[
-{place:"투발루",region:"오세아니아",name:"테아",role:"섬마을 주민",emoji:"🌊",lon:179,lat:-8,dx:0,dy:-62,
+{place:"투발루",region:"오세아니아",name:"테아",role:"섬마을 주민",emoji:"🌊",face:"tea",lon:179,lat:-8,dx:0,dy:-62,
  topic:"기후 위기 · 바닷물 높아짐",title:"바닷물이 가까워진 우리 마을",
  say:"안녕! 나는 투발루의 작은 섬에 사는 테아야. 요즘 바닷물이 자꾸 마을 가까이 들어와서 걱정이 많아.",
  mission:"테아가 가장 지키고 싶은 것을 알아보고, 마을을 지킬 방법을 함께 생각해 보세요.",
  questions:["바닷물이 들어오면 생활이 어떻게 달라져?","마을 사람들은 어떤 노력을 하고 있어?","다른 나라 사람들이 도울 수 있는 일은 뭐야?"],botUrl:"https://egpt-builder.web.app/c/xk8ys7at"},
-{place:"말리",region:"아프리카",name:"세이두",role:"농부",emoji:"🌾",lon:-2,lat:17,dx:4,dy:72,
+{place:"말리",region:"아프리카",name:"세이두",role:"농부",emoji:"🌾",face:"seydou",lon:-2,lat:17,dx:4,dy:72,
  topic:"가뭄 · 식량 부족 · 가난",title:"비가 오지 않는 들판",
  say:"나는 말리에서 농사를 짓는 세이두란다. 비가 제때 오지 않아서 올해 농사가 무척 힘들구나.",
  mission:"지금 당장 필요한 도움과 오래도록 도움이 될 방법을 나누어 생각해 보세요.",
  questions:["비가 안 오면 가족의 생활은 어떻게 돼요?","지금 가장 필요한 것은 무엇인가요?","오랫동안 농사를 지으려면 무엇이 필요해요?"],botUrl:"https://egpt-builder.web.app/c/e3ed8f69"},
-{place:"미얀마",region:"아시아",name:"민",role:"청소년",emoji:"📚",lon:96,lat:21,dx:58,dy:16,
+{place:"미얀마",region:"아시아",name:"민",role:"청소년",emoji:"📚",face:"min",lon:96,lat:21,dx:58,dy:16,
  topic:"분쟁 · 평화 · 인권",title:"멈춰 버린 교실",
  say:"나는 미얀마에 사는 민이야. 다툼(분쟁) 때문에 학교에 못 가는 날이 많아졌지만, 나는 계속 공부하고 싶어.",
  mission:"민이 안전하게 지내면서 계속 배울 수 있는 방법을 찾아보세요.",
  questions:["학교에 못 가면 어떤 점이 가장 힘들어?","어린이가 꼭 누려야 할 권리는 뭘까?","계속 배우려면 어떤 도움이 필요해?"],botUrl:"https://egpt-builder.web.app/c/a368vvew"},
-{place:"방글라데시",region:"아시아",name:"리마",role:"마을 주민",emoji:"🏠",lon:90,lat:24,dx:-40,dy:-82,
+{place:"방글라데시",region:"아시아",name:"리마",role:"마을 주민",emoji:"🏠",face:"rima",lon:90,lat:24,dx:-40,dy:-82,
  topic:"홍수 · 살던 곳을 떠나는 사람들",title:"떠날까, 남을까",
  say:"나는 방글라데시에 사는 리마야. 홍수가 자주 나서 이곳에 계속 살지, 다른 곳으로 옮길지 가족과 고민하고 있어.",
  mission:"살던 곳을 떠날 때 얻는 것과 잃는 것을 비교하고, 리마 가족에게 알맞은 방법을 제안해 보세요.",
  questions:["홍수가 나면 어떤 일이 생겨?","다른 곳으로 옮기면 무엇이 달라져?","남는 사람들을 도울 방법은 뭐가 있을까?"],botUrl:"https://egpt-builder.web.app/c/tbv8amfr"},
-{place:"국제구호본부",region:"스위스 제네바",name:"수현",role:"구호 활동가",emoji:"🤝",lon:6,lat:46,dx:46,dy:-64,
+{place:"국제구호본부",region:"스위스 제네바",name:"수현",role:"구호 활동가",emoji:"🤝",face:"suhyeon",lon:6,lat:46,dx:46,dy:-64,
  topic:"국제 협력 · 공평하게 나누기",title:"10점으로 누구를 도울까?",
  say:"나는 여러 나라 사람들을 돕는 구호 활동가 수현이야. 도울 수 있는 예산은 10점뿐인데, 도움이 필요한 곳은 많아. 함께 정해 줄래?",
  mission:"앞에서 만난 인물들을 떠올리며 10점을 공평하게 나누고, 개인·나라·국제기구·NGO가 할 일을 정해 보세요.",
@@ -387,6 +390,7 @@ const store={get(){try{return JSON.parse(localStorage.getItem(storageKey)||"[]")
 const npcKey="globalNpcRescueTeamNpcV1";
 const npcStore={get(){try{const v=JSON.parse(localStorage.getItem(npcKey)||"null");return v&&typeof v==="object"&&v.name?v:null}catch{return null}},set(v){try{localStorage.setItem(npcKey,JSON.stringify(v))}catch{}},clear(){try{localStorage.removeItem(npcKey)}catch{}}};
 let teamNpc=npcStore.get();
+const faceImg=(m,cls)=>m.face?`<img class="${cls}" src="images/npc/face-${m.face}.webp" alt="${esc(m.name)}" draggable="false">`:m.emoji;
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const loadProgress=()=>{const v=store.get();return new Set(Array.isArray(v)?v.filter(n=>Number.isInteger(n)&&n>=0&&n<missions.length):[])};
 let completed=loadProgress();
@@ -428,7 +432,7 @@ function renderReveal(){
 }
 function renderNodes(){
   $("nodes").innerHTML=missions.map((m,i)=>{const st=stateOf(i),[x,y]=nodePoint(m),status=st==="done"?"다녀왔어요":st==="current"?"지금 갈 곳":"잠겨 있어요";
-    return`<div class="map-node ${st} ${i===selected?"selected":""}" data-index="${i}" style="left:${x/W*100}%;top:${y/H*100}%"><button class="node-button" type="button" aria-label="${i+1}번 ${m.place}, ${status}" ${st==="locked"?'aria-disabled="true"':""}><span class="node-core"><span class="node-num">${i+1}</span>${m.emoji}<span class="node-badge">${icons[st]}</span></span><span class="node-label"><small>${status}</small>${m.place}</span></button></div>`}).join("")
+    return`<div class="map-node ${st} ${i===selected?"selected":""}" data-index="${i}" style="left:${x/W*100}%;top:${y/H*100}%"><button class="node-button" type="button" aria-label="${i+1}번 ${m.place}, ${status}" ${st==="locked"?'aria-disabled="true"':""}><span class="node-core"><span class="node-num">${i+1}</span>${faceImg(m,"node-face")}<span class="node-badge">${icons[st]}</span></span><span class="node-label"><small>${status}</small>${m.place}</span></button></div>`}).join("")
   +(allDone()?(()=>{const[x,y]=nodePoint(BONUS),made=!!teamNpc,status=made?"완성했어요":"새 임무!",label=made?`우리 NPC ${esc(teamNpc.name)}`:"우리 모둠";
     return`<div class="map-node bonus ${made?"made":""} ${selected===B?"selected":""}" data-index="${B}" style="left:${x/W*100}%;top:${y/H*100}%"><button class="node-button" type="button" aria-label="비밀 임무 우리 모둠, ${status}"><span class="node-core"><span class="node-num">★</span>${made?teamNpc.emoji:BONUS.emoji}<span class="node-badge">${made?"✅":""}</span></span><span class="node-label"><small>${status}</small>${label}</span></button></div>`})():"");
   document.querySelectorAll(".node-button").forEach(b=>b.addEventListener("click",()=>selectNode(Number(b.parentElement.dataset.index))));
@@ -436,7 +440,7 @@ function renderNodes(){
 function renderPanel(){
   const all=allDone(),bonus=selected===B,m=bonus?BONUS:missions[selected],st=stateOf(selected);
   $("panelChips").innerHTML=(bonus?`<span class="chip bonus">✨ 비밀 임무</span>`:`<span class="chip step">임무 ${selected+1} / ${missions.length}</span>`)+`<span class="chip">📍 ${m.place} · ${m.region}</span><span class="chip topic">${m.topic}</span>`;
-  $("panelTitle").textContent=m.title;$("avatar").textContent=bonus&&teamNpc?teamNpc.emoji:m.emoji;$("avatar").classList.toggle("bonus",bonus);
+  $("panelTitle").textContent=m.title;$("avatar").innerHTML=bonus?esc(teamNpc?teamNpc.emoji:m.emoji):faceImg(m,"avatar-face");$("avatar").classList.toggle("bonus",bonus);
   $("npcName").innerHTML=`${esc(bonus&&teamNpc?teamNpc.name:m.name)}<span>${esc(bonus&&teamNpc?teamNpc.place:m.role)}</span>`;
   $("npcSay").textContent=bonus&&teamNpc?teamNpc.say:m.say;$("objective").textContent=m.mission;
   const btn=$("enterBtn");btn.disabled=st==="locked";btn.classList.toggle("done",st==="done");btn.classList.toggle("bonus",bonus);
@@ -464,7 +468,7 @@ function openMission(){
   if(selected===B){openNpcDialog();return}
   const m=missions[selected],st=stateOf(selected);if(st==="locked")return;
   $("dialogChips").innerHTML=`<span class="chip">📍 ${m.place}</span><span class="chip topic">${m.topic}</span>`;
-  $("dialogTitle").textContent=`${m.emoji} ${m.name}의 이야기`;
+  $("dialogTitle").innerHTML=`${faceImg(m,"title-face")} ${esc(m.name)}의 이야기`;
   const talk=$("talkBtn");talk.href=m.botUrl||"https://egpt.kr/";talk.textContent=`💬 ${josa(m.name,"과","와")} 대화 시작하기`;
   $("questions").innerHTML=m.questions.map(q=>`<button class="q" type="button"><span>${esc(q)}</span><span class="copy">복사</span></button>`).join("");
   $("questions").querySelectorAll(".q").forEach((b,k)=>b.addEventListener("click",()=>copyQuestion(m.questions[k])));
