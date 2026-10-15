@@ -30,6 +30,43 @@ button,a,input{font:inherit}
 .fragment{width:26px;height:26px;border-radius:7px;display:grid;place-items:center;font-size:15px;background:rgba(255,255,255,.2);border:2px dashed rgba(255,255,255,.55)}
 .fragment.on{background:var(--yellow);border:2px solid #fff;box-shadow:0 0 0 2px var(--yellow)}
 .reset{border:0;background:transparent;color:rgba(255,255,255,.75);font-size:13px;text-decoration:underline;cursor:pointer;padding:6px}
+.passport-btn{display:flex;align-items:center;gap:6px;border:2px solid rgba(255,255,255,.7);background:rgba(255,255,255,.14);color:#fff;border-radius:999px;padding:5px 12px;font-size:15px;cursor:pointer}
+.passport-btn:hover{background:rgba(255,255,255,.26)}
+/* NPC 여권 */
+#passportDialog{width:min(520px,calc(100% - 24px));background:transparent;box-shadow:none;overflow:visible}
+#passportDialog::backdrop{background:rgba(20,40,55,.7)}
+.passport{background:#1f4e79;border-radius:22px;padding:14px;box-shadow:0 22px 60px rgba(0,0,0,.4)}
+.passport-inner{background:#fffdf5;border:3px solid var(--yellow);border-radius:16px;padding:20px 22px 18px}
+.passport-head{display:flex;align-items:center;justify-content:center;gap:10px;color:#1f4e79;font-family:var(--title);font-size:28px;letter-spacing:2px}
+.passport-head small{display:block;font-size:13px;letter-spacing:4px;color:#7a8a99;text-align:center}
+.passport-sub{margin:4px 0 14px;text-align:center;font-size:15px;color:var(--ink-soft)}
+.pp-field{display:grid;gap:4px;margin-top:10px;font-size:14px;color:var(--ink-soft)}
+.pp-field input,.pp-field select{border:2px solid var(--line);border-radius:10px;padding:10px 12px;font-size:18px;color:var(--ink);background:#fff;width:100%}
+.pp-field input:focus,.pp-field select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px #d6e8f5}
+.pp-note{margin:10px 0 0;font-size:13px;color:#8b98a2;line-height:1.5}
+.pp-issue{margin-top:14px;width:100%;border:0;border-radius:14px;padding:14px;font-size:19px;cursor:pointer;background:var(--blue);color:#fff;box-shadow:0 4px 0 var(--blue-dark)}
+.pp-issue:active{transform:translateY(2px);box-shadow:0 2px 0 var(--blue-dark)}
+.pp-card{display:flex;gap:16px;align-items:center;margin-top:6px}
+.pp-photo{flex:none;width:92px;height:92px;border-radius:14px;background:var(--yellow-soft);border:3px solid var(--yellow);display:grid;place-items:center;font-size:50px}
+.pp-photo img{width:100%;height:100%;object-fit:cover;border-radius:10px}
+.pp-info{display:grid;gap:4px;font-size:16px}
+.pp-info b{font-size:24px;font-family:var(--title);color:#1f4e79}
+.pp-info span{color:var(--ink-soft);font-size:14px}
+.pp-stamps{display:flex;justify-content:space-between;gap:6px;margin-top:16px}
+.pp-stamp{flex:1;text-align:center;font-size:12px;color:var(--ink-soft)}
+.pp-stamp i{display:block;width:54px;height:54px;margin:0 auto 4px;border-radius:50%;border:3px dashed #c9d3dc;background:#f2f5f8;overflow:hidden;position:relative}
+.pp-stamp i img{width:100%;height:100%;object-fit:cover;filter:grayscale(1);opacity:.35}
+.pp-stamp.on i{border:3px solid var(--green);background:#fff;box-shadow:0 0 0 2px var(--green-soft)}
+.pp-stamp.on i img{filter:none;opacity:1}
+.pp-stamp.on i:after{content:"✓";position:absolute;right:-2px;bottom:-2px;width:20px;height:20px;border-radius:50%;background:var(--green);color:#fff;font-size:13px;display:grid;place-items:center;border:2px solid #fff}
+.pp-stamp.on{color:var(--green)}
+.pp-actions{display:grid;grid-template-columns:1fr 2fr;gap:8px;margin-top:16px}
+.pp-actions .ghost{border:2px solid var(--line);background:#fff;border-radius:14px;padding:11px;font-size:16px;cursor:pointer;color:var(--ink)}
+.pp-actions .go{border:0;border-radius:14px;padding:11px;font-size:18px;cursor:pointer;background:var(--blue);color:#fff;box-shadow:0 4px 0 var(--blue-dark)}
+.pp-done{margin-top:12px;text-align:center;font-size:15px;color:#1d7a50;background:var(--green-soft);border-radius:10px;padding:8px}
+.q.intro{background:var(--yellow-soft);border-color:#f2d27a}
+.q.intro .copy{color:#a35512}
+@media(max-width:600px){.passport-btn span.lbl{display:none}.pp-stamp i{width:44px;height:44px}.pp-stamp{font-size:11px}}
 .reset:hover{color:#fff}
 
 main{min-height:0;display:grid;grid-template-columns:minmax(0,1fr) clamp(320px,29vw,400px)}
@@ -264,6 +301,7 @@ dialog::backdrop{background:rgba(20,40,55,.55)}
   <div class="brand"><span class="globe" aria-hidden="true">🌏</span>지구촌 NPC 구조대</div>
   <div class="hud">
     <div class="progress"><span class="progress-label" id="progressLabel">세계 조각 0 / 5</span><div class="fragments" id="fragments" aria-hidden="true"></div></div>
+    <button class="passport-btn" id="passportBtn" type="button" aria-label="내 여권 보기">🛂 <span class="lbl" id="passportLabel">여권 만들기</span></button>
     <button class="reset" id="resetBtn" type="button">처음부터 다시</button>
   </div>
 </header>
@@ -332,6 +370,22 @@ dialog::backdrop{background:rgba(20,40,55,.55)}
   </div>
 </div></dialog>
 <div id="printArea"></div>
+<dialog id="passportDialog" aria-labelledby="passportTitle"><div class="passport"><div class="passport-inner">
+  <div class="passport-head"><span aria-hidden="true">🌏</span><div><small>GLOBAL NPC RESCUE</small><span id="passportTitle">NPC 여권</span></div><span aria-hidden="true">🧩</span></div>
+  <form id="passportForm">
+    <p class="passport-sub">지구촌 구조대원이 되려면 여권이 필요해요. 모둠과 별명을 적어 주세요.</p>
+    <label class="pp-field"><span>모둠</span><select name="team" required><option value="">모둠을 골라요</option><option>1모둠</option><option>2모둠</option><option>3모둠</option><option>4모둠</option><option>5모둠</option><option>6모둠</option><option>7모둠</option><option>8모둠</option></select></label>
+    <label class="pp-field"><span>별명 (실제 이름은 쓰지 않아요)</span><input name="nick" maxlength="10" minlength="2" required placeholder="예: 바다, 번개, 토끼" autocomplete="off"></label>
+    <p class="pp-note">※ 인물과 대화할 때도 이름 대신 이 모둠번호와 별명만 알려 줘요.</p>
+    <button class="pp-issue" type="submit">🛂 여권 발급받기</button>
+  </form>
+  <div id="passportCard" hidden>
+    <div class="pp-card"><div class="pp-photo" id="ppPhoto">🧑‍🚀</div><div class="pp-info"><span>구조대원</span><b id="ppNick"></b><span id="ppTeam"></span><span id="ppDate"></span></div></div>
+    <div class="pp-stamps" id="ppStamps"></div>
+    <div class="pp-done" id="ppDone" hidden>🎉 세계 조각을 모두 모았어요! 지도의 우리 모둠 임무를 확인해요.</div>
+    <div class="pp-actions"><button class="ghost" id="ppEdit" type="button">✏️ 고치기</button><button class="go" id="ppGo" type="button">🗺️ 탐험 시작!</button></div>
+  </div>
+</div></div></dialog>
 <div class="celebrate" id="celebrate"><div class="reward"><div><span>🧩</span>세계 조각<br>획득!</div></div></div>
 <div class="toast" id="toast" role="status"></div>
 
@@ -390,6 +444,9 @@ const store={get(){try{return JSON.parse(localStorage.getItem(storageKey)||"[]")
 const npcKey="globalNpcRescueTeamNpcV1";
 const npcStore={get(){try{const v=JSON.parse(localStorage.getItem(npcKey)||"null");return v&&typeof v==="object"&&v.name?v:null}catch{return null}},set(v){try{localStorage.setItem(npcKey,JSON.stringify(v))}catch{}},clear(){try{localStorage.removeItem(npcKey)}catch{}}};
 let teamNpc=npcStore.get();
+const idKey="globalNpcRescueIdentityV1";
+const idStore={get(){try{const v=JSON.parse(localStorage.getItem(idKey)||"null");return v&&v.nick?v:null}catch{return null}},set(v){try{localStorage.setItem(idKey,JSON.stringify(v))}catch{}}};
+let me=idStore.get();
 const faceImg=(m,cls)=>m.face?`<img class="${cls}" src="images/npc/face-${m.face}.webp" alt="${esc(m.name)}" draggable="false">`:m.emoji;
 const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const loadProgress=()=>{const v=store.get();return new Set(Array.isArray(v)?v.filter(n=>Number.isInteger(n)&&n>=0&&n<missions.length):[])};
@@ -470,8 +527,10 @@ function openMission(){
   $("dialogChips").innerHTML=`<span class="chip">📍 ${m.place}</span><span class="chip topic">${m.topic}</span>`;
   $("dialogTitle").innerHTML=`${faceImg(m,"title-face")} ${esc(m.name)}의 이야기`;
   const talk=$("talkBtn");talk.href=m.botUrl||"https://egpt.kr/";talk.textContent=`💬 ${josa(m.name,"과","와")} 대화 시작하기`;
-  $("questions").innerHTML=m.questions.map(q=>`<button class="q" type="button"><span>${esc(q)}</span><span class="copy">복사</span></button>`).join("");
-  $("questions").querySelectorAll(".q").forEach((b,k)=>b.addEventListener("click",()=>copyQuestion(m.questions[k])));
+  const intro=me?`안녕! 나는 ${me.team} ${josa(me.nick,"이야","야")}`:null;
+  const qs=intro?[intro,...m.questions]:m.questions;
+  $("questions").innerHTML=qs.map((q,k)=>`<button class="q ${intro&&k===0?"intro":""}" type="button"><span>${intro&&k===0?"👋 먼저 인사해요: ":""}${esc(q)}</span><span class="copy">복사</span></button>`).join("");
+  $("questions").querySelectorAll(".q").forEach((b,k)=>b.addEventListener("click",()=>copyQuestion(qs[k])));
   const done=completed.has(selected);
   $("checks").innerHTML=(m.checks||defaultChecks).map(c=>`<label class="check"><input type="checkbox" ${done?"checked disabled":""}><span>${esc(c)}</span></label>`).join("");
   $("checks").querySelectorAll("input").forEach(c=>c.addEventListener("change",updateComplete));
@@ -511,7 +570,7 @@ function renderFaces(){$("faces").innerHTML=FACES.map(f=>`<button class="face ${
 $("issueList").innerHTML=ISSUES.map(v=>`<option value="${esc(v)}"></option>`).join("");
 function npcCardHtml(n){return`<div class="card-top"><div class="card-face">${n.emoji}</div><div><div class="card-name">${esc(n.name)}</div><div class="card-place">📍 ${esc(n.place)}</div></div></div><div class="card-issue">${esc(n.issue)}</div><div class="card-say">“${esc(n.say)}”</div><div class="card-foot"><span>만든 모둠: ${esc(n.team||"우리 모둠")}</span><span>${esc(n.date||"")}</span></div>`}
 function showNpcForm(){const f=$("npcForm"),n=teamNpc;face=n?.emoji||FACES[0];renderFaces();
-  f.name.value=n?.name||"";f.place.value=n?.place||"";f.issue.value=n?.issue||"";f.say.value=n?.say||"";f.team.value=n?.team||"";
+  f.name.value=n?.name||"";f.place.value=n?.place||"";f.issue.value=n?.issue||"";f.say.value=n?.say||"";f.team.value=n?.team||me?.team||"";
   f.hidden=false;$("npcCardWrap").hidden=true}
 function showNpcCard(){$("npcCard").innerHTML=npcCardHtml(teamNpc);$("npcForm").hidden=true;$("npcCardWrap").hidden=false}
 function openNpcDialog(){if(teamNpc)showNpcCard();else showNpcForm();$("npcDialog").showModal()}
@@ -524,5 +583,26 @@ $("closeNpc").addEventListener("click",()=>$("npcDialog").close());
 let downOnNpcBackdrop=false;$("npcDialog").addEventListener("mousedown",e=>{downOnNpcBackdrop=e.target===$("npcDialog")});
 $("npcDialog").addEventListener("click",e=>{if(downOnNpcBackdrop&&e.target===$("npcDialog"))$("npcDialog").close()});
 
-drawMap();render();
+// ----- NPC 여권 -----
+function renderPassportBadge(){$("passportLabel").textContent=me?`${me.team} ${me.nick}`:"여권 만들기"}
+function renderPassportCard(){
+  $("ppNick").textContent=me.nick;$("ppTeam").textContent=`${me.team} · 지구촌 NPC 구조대`;$("ppDate").textContent=`발급일 ${me.issued}`;
+  $("ppPhoto").innerHTML=teamNpc?esc(teamNpc.emoji):"🧑‍🚀";
+  $("ppStamps").innerHTML=missions.map((m,i)=>`<div class="pp-stamp ${completed.has(i)?"on":""}"><i>${faceImg(m,"")}</i>${esc(m.place)}</div>`).join("");
+  $("ppDone").hidden=!allDone();
+}
+function openPassport(mode){
+  const form=$("passportForm"),card=$("passportCard");
+  if(mode==="form"||!me){form.hidden=false;card.hidden=true;if(me){form.team.value=me.team;form.nick.value=me.nick}}
+  else{form.hidden=true;card.hidden=false;renderPassportCard()}
+  if(!$("passportDialog").open)$("passportDialog").showModal();
+}
+$("passportForm").addEventListener("submit",e=>{e.preventDefault();const f=e.target;const nick=f.nick.value.trim();if(nick.length<2){showToast("별명은 두 글자 이상 적어 주세요.");return}
+  const first=!me;me={team:f.team.value,nick,issued:me?.issued||new Date().toLocaleDateString("ko-KR")};idStore.set(me);renderPassportBadge();openPassport("card");
+  if(first)showToast(`🛂 ${me.team} ${josa(me.nick,"이","가")} 구조대원이 되었어요!`)});
+$("ppEdit").addEventListener("click",()=>openPassport("form"));
+$("ppGo").addEventListener("click",()=>$("passportDialog").close());
+$("passportBtn").addEventListener("click",()=>openPassport(me?"card":"form"));
+$("passportDialog").addEventListener("cancel",e=>{if(!me)e.preventDefault()});
+drawMap();render();renderPassportBadge();if(!me)openPassport("form");
 </script></body></html>
