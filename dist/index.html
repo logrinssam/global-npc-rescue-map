@@ -719,5 +719,27 @@ $("ppEdit").addEventListener("click",()=>openPassport("form"));
 $("ppGo").addEventListener("click",()=>$("passportDialog").close());
 $("passportBtn").addEventListener("click",()=>openPassport(me?"card":"form"));
 $("passportDialog").addEventListener("cancel",e=>{if(!me)e.preventDefault()});
-drawMap();render();renderPassportBadge();if(!me)openPassport("form");
+// ----- 촬영용 데모 모드: ?demo 로 열면 여권 → 조각 5개 자동 수집 → 지도 완성 → 여권 도장 순으로 재생 -----
+const DEMO=new URLSearchParams(location.search).has("demo");
+let demoTimers=[];
+function demoRun(){
+  demoTimers.forEach(clearTimeout);demoTimers=[];pending.forEach(clearTimeout);pending=[];
+  completed.clear();store.clear();teamNpc=null;npcStore.clear();justCompleted=false;
+  me={team:"1모둠",nick:"바다",issued:new Date().toLocaleDateString("ko-KR")};idStore.set(me);renderPassportBadge();
+  selected=0;render();$("missionDialog").open&&$("missionDialog").close();$("npcDialog").open&&$("npcDialog").close();
+  const at=(ms,fn)=>demoTimers.push(setTimeout(fn,ms));
+  at(600,()=>openPassport("card"));
+  at(3600,()=>$("passportDialog").close());
+  for(let i=0;i<5;i++)at(4600+i*3200,()=>{selected=i;renderNodes();renderPanel();completeMission()});
+  at(4600+5*3200+3800,()=>openPassport("card"));
+  at(4600+5*3200+8800,()=>$("passportDialog").close());
+}
+if(DEMO){
+  const b=document.createElement("button");b.id="demoBtn";b.type="button";b.textContent="▶ 데모 재생";
+  b.style.cssText="position:fixed;left:14px;bottom:14px;z-index:200;border:0;border-radius:999px;padding:10px 16px;font:16px var(--title);background:#1b3a5c;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.3);cursor:pointer;opacity:.9";
+  b.addEventListener("click",()=>{b.style.display="none";demoRun();demoTimers.push(setTimeout(()=>b.style.display="",4600+5*3200+9500))});
+  document.body.appendChild(b);
+  document.addEventListener("keydown",e=>{if(e.key==="d"||e.key==="D")b.click()});
+}
+drawMap();render();renderPassportBadge();if(!me&&!DEMO)openPassport("form");
 </script></body></html>
