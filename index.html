@@ -218,6 +218,20 @@ dialog::backdrop{background:rgba(20,40,55,.55)}
 .map-node.bonus .node-label small{color:#e9ddfb}
 @keyframes pop{0%{transform:scale(0) rotate(-40deg)}100%{transform:scale(1)}}
 .chip.bonus{background:#8e5bd6;color:#fff}
+/* 비밀 임무 2: 친구들이 만든 NPC */
+.map-node.friend .node-core{border-color:#d94f8a;background:#fff0f6;animation:pop .7s cubic-bezier(.2,1.4,.4,1) backwards}
+.map-node.friend .node-num{background:#d94f8a;font-size:calc(var(--n)*.2)}
+.map-node.friend.done .node-core{border-color:var(--green);background:var(--green-soft)}
+.map-node.friend.done .node-num{background:var(--green)}
+.map-node.friend .node-label{background:#fff0f6}
+.map-node.friend .node-label small{color:#b03a6e}
+.map-node.friend.selected .node-label{background:var(--ink);color:#fff}
+.map-node.friend.selected .node-label small{color:#f6c9dd}
+.chip.friend{background:#d94f8a;color:#fff}
+.legend .is-friend i{border-color:#d94f8a;background:#fff0f6}
+.enter.friend{background:#d94f8a;box-shadow:0 4px 0 #a8356a}
+.avatar.friend{background:#fff0f6;border-color:#d94f8a}
+.finale .friends{margin:8px 0 0;font-size:14px;color:#b03a6e}
 .enter.bonus{background:#8e5bd6;box-shadow:0 4px 0 #6a3fb0}
 .avatar.bonus{background:#f3ecfd;border-color:#8e5bd6}
 .finale .go{margin-top:8px;width:100%;border:0;border-radius:12px;padding:10px;font-size:16px;cursor:pointer;background:#8e5bd6;color:#fff;box-shadow:0 3px 0 #6a3fb0}
@@ -409,7 +423,7 @@ dialog#missionDialog .dialog-head{margin:-18px -24px 0;padding:18px 24px 12px;ba
       <div class="map-clip"><svg class="world-map" id="worldMap" viewBox="0 0 1000 480.8" aria-hidden="true"></svg><div class="shine"></div></div>
       <div id="nodes"></div>
     </div></div>
-    <div class="legend"><span class="is-current"><i></i>지금 갈 곳</span><span class="is-done"><i></i>다녀온 곳</span><span><i></i>아직 잠긴 곳</span><span class="is-pin"><i></i>실제 위치</span></div>
+    <div class="legend"><span class="is-current"><i></i>지금 갈 곳</span><span class="is-done"><i></i>다녀온 곳</span><span><i></i>아직 잠긴 곳</span><span class="is-pin"><i></i>실제 위치</span><span class="is-friend" id="legendFriend" hidden><i></i>친구가 만든 NPC</span></div>
   </section>
   <aside class="quest-panel" aria-live="polite">
     <div class="chips" id="panelChips"></div>
@@ -419,7 +433,7 @@ dialog#missionDialog .dialog-head{margin:-18px -24px 0;padding:18px 24px 12px;ba
       <div><div class="npc-name" id="npcName"></div><div class="bubble" id="npcSay"></div></div>
     </div>
     <div class="objective" id="objectiveBox"><h3>🎯 나의 임무</h3><p id="objective"></p></div>
-    <div class="finale" id="finale" hidden><h3>🎉 세계 지도가 완성됐어요!</h3><p>다섯 명의 목소리를 모두 들었어요. 지도에 새 신호가 나타났어요! 🚩 우리 모둠 자리를 눌러 모둠만의 NPC를 만들어 보세요.</p><button class="go" id="goBonus" type="button">✨ 비밀 임무로 가기</button></div>
+    <div class="finale" id="finale" hidden><h3>🎉 세계 지도가 완성됐어요!</h3><p>다섯 명의 목소리를 모두 들었어요. 지도에 새 신호가 나타났어요! 🚩 우리 모둠 자리를 눌러 모둠만의 NPC를 만들어 보세요.</p><p class="friends" id="finaleFriends" hidden>👥 친구들이 만든 NPC 다섯 명도 지도에 나타났어요. 분홍색 자리를 눌러 만나 보세요.</p><button class="go" id="goBonus" type="button">✨ 비밀 임무로 가기</button></div>
     <div class="panel-actions">
       <button class="enter" id="enterBtn" type="button"></button>
       <p class="locked-note" id="lockedNote" hidden>🔒 앞의 인물을 먼저 만나야 열려요.</p>
@@ -536,6 +550,38 @@ const BONUS={place:"우리 모둠",region:"대한민국",name:"우리 모둠",ro
  topic:"우리가 만드는 지구촌 이야기",title:"우리 모둠의 NPC 만들기",
  say:"다섯 친구의 목소리를 모두 들었구나! 이번에는 너희 모둠이 새로운 인물을 만들어 지구촌에 소개해 줄래?",
  mission:"모둠이 고른 지구촌 문제를 겪는 가상 인물을 만들어 보세요. 얼굴, 이름, 사는 곳, 겪는 문제, 첫인사를 정하면 NPC 카드가 완성돼요."};
+// 비밀 임무 2: 우리 반 모둠들이 만든 NPC (2026-10-21). botUrl은 E-GPT 학생용 링크(교사 계정 logrinssam@gmail.com)
+// 세계 조각 5개를 다 모으면 지도에 나타난다. 주소에 ?class 를 붙이면 조각과 상관없이 바로 열린다(9차시용).
+const CLASS_NPCS=[
+{team:"1모둠",place:"인도",region:"아시아",name:"닐",face:"nil",role:"청소년 · 1모둠이 만듦",emoji:"👦",theme:"#d94f8a",lon:78,lat:22,dx:-40,dy:50,
+ topic:"전염병(결핵)",title:"기침이 멈추지 않는 이웃",
+ say:"안녕 나는 인도에 사는 닐이야! 우리 지역 사람들은 전염병 때문에 고통받고 있어.",
+ mission:"약을 끝까지 먹으면 낫는 병이 왜 계속 퍼지는지 알아보고, 닐의 동네가 할 수 있는 일을 함께 정해 보세요.",
+ questions:["결핵은 어떻게 옮아?","약을 중간에 끊으면 어떻게 돼?","우리 동네에서 결핵이 계속 퍼지는 까닭이 뭐야?"],botUrl:"https://egpt-builder.web.app/c/w65udxcc"},
+{team:"2모둠",place:"중국",region:"아시아",name:"쉐쉐",face:"xiexie",role:"청소년 · 2모둠이 만듦",emoji:"👩",theme:"#d94f8a",lon:118,lat:30,dx:-20,dy:-110,
+ topic:"기후변화로 인한 태풍",title:"태풍이 다가오는 우리 동네",
+ say:"안녕! 나는 13살 쉐쉐라고해~ 우리 나라는 지금 기후변화로 인해 슈퍼태풍이 왔어. 슈퍼태풍으로부터 나를 구해줘.",
+ mission:"태풍은 막을 수 없지만 준비할 수는 있어요. 쉐쉐의 가족이 먼저 해야 할 일과 꼭 지켜야 할 행동 요령을 함께 정해 보세요.",
+ questions:["태풍이 오면 생활이 어떻게 달라져?","태풍이 올 때 꼭 지켜야 할 행동 요령은 뭐야?","바다가 더워지는 것과 태풍은 무슨 관계야?"],botUrl:"https://egpt-builder.web.app/c/su4p8drv"},
+{team:"3모둠",place:"스페인 발렌시아",region:"유럽",name:"소피아",face:"sofia",role:"청소년 · 3모둠이 만듦",emoji:"👩",theme:"#d94f8a",lon:-0.4,lat:39.5,dx:-20,dy:-125,
+ topic:"홍수 · 가족과 헤어짐",title:"물에 잠긴 우리 마을",
+ say:"안녕 나는 13살 소피아야. 지금 우리 마을에 홍수가 나서 어머니와 헤어졌어. 지금 우리 집도 잠겨서 어떻게 살지 모르겠어. 나 좀 도와줘!",
+ mission:"소피아에게 지금 당장 필요한 것과, 다음 홍수를 막기 위해 누가 무엇을 해야 하는지 나누어 생각해 보세요.",
+ questions:["홍수가 났을 때 어떻게 대피했어?","지금 가장 필요한 게 뭐야?","다음 홍수를 막으려면 누가 무엇을 해야 할까?"],botUrl:"https://egpt-builder.web.app/c/3qpzkhqv"},
+{team:"4모둠",place:"콩고민주공화국",region:"아프리카",name:"사쿠",face:"saku",role:"청소년 · 4모둠이 만듦",emoji:"👦",theme:"#d94f8a",lon:24,lat:-3,dx:20,dy:70,
+ topic:"질병 · 병원 부족",title:"병원이 모자란 우리 마을",
+ say:"안녕! 나는 콩고에 사는 사쿠야 지금 전염병이 도는데 병원이 많이 없어서 힘들어 방법을 찾아줄래?",
+ mission:"병원이 모자란 마을이 전염병을 이겨 내려면 무엇부터 해야 할지, 사쿠의 마을과 다른 나라가 할 일을 함께 정해 보세요.",
+ questions:["에볼라는 어떻게 옮아?","병원이 모자라면 어떤 일이 생겨?","마을 보건 요원은 무슨 일을 해?"],botUrl:"https://egpt-builder.web.app/c/wuzy83zj"},
+{team:"5모둠",place:"독일 작센주",region:"유럽",name:"안나",face:"anna",role:"어른 · 5모둠이 만듦",emoji:"👩",theme:"#d94f8a",lon:13.7,lat:51,dx:-45,dy:62,
+ topic:"인종차별",title:"피부색으로 거절당한 날",
+ say:"안녕!난 독일에서 살고 있는 안나야. 요즘 우리 독일에서 인종차별이 심해져서 힘들어...",
+ mission:"안나가 겪는 일이 왜 생기는지 알아보고, 모두가 공평하게 살기 위해 법·학교·시민이 할 일을 함께 정해 보세요.",
+ questions:["면접에서 어떤 일이 있었어?","인종차별은 왜 생긴다고 생각해?","모두가 공평하게 살려면 무엇이 필요해?"],botUrl:"https://egpt-builder.web.app/c/kf2mxt7y"}];
+const F0=B+1;
+const isFriend=i=>i>=F0&&i<F0+CLASS_NPCS.length;
+const friendOf=i=>CLASS_NPCS[i-F0];
+const CLASS_OPEN=new URLSearchParams(location.search).has("class");
 const ISSUES=["기후 위기 · 바닷물 높아짐","가뭄 · 식량 부족","분쟁 · 평화 · 인권","홍수 · 살던 곳을 떠나는 사람들","쓰레기 · 환경 오염","깨끗한 물 부족","질병 · 병원 부족","학교에 못 가는 아이들","가난 · 일자리 부족","사라지는 동물과 숲"];
 const FACES=["👧","👦","👩","👨","👵","👴","🧕","👩‍🌾","👨‍🏫","🧑‍🔬"];
 
@@ -554,6 +600,10 @@ const store={get(){try{return JSON.parse(localStorage.getItem(storageKey)||"[]")
 const npcKey="globalNpcRescueTeamNpcV1";
 const npcStore={get(){try{const v=JSON.parse(localStorage.getItem(npcKey)||"null");return v&&typeof v==="object"&&v.name?v:null}catch{return null}},set(v){try{localStorage.setItem(npcKey,JSON.stringify(v))}catch{}},clear(){try{localStorage.removeItem(npcKey)}catch{}}};
 let teamNpc=npcStore.get();
+const classKey="globalNpcRescueClassV1";
+const classStore={get(){try{return JSON.parse(localStorage.getItem(classKey)||"[]")}catch{return[]}},set(v){try{localStorage.setItem(classKey,JSON.stringify(v))}catch{}},clear(){try{localStorage.removeItem(classKey)}catch{}}};
+const loadClass=()=>{const v=classStore.get();return new Set(Array.isArray(v)?v.filter(n=>Number.isInteger(n)&&n>=0&&n<CLASS_NPCS.length):[])};
+let classDone=loadClass();
 const idKey="globalNpcRescueIdentityV1";
 const idStore={get(){try{const v=JSON.parse(localStorage.getItem(idKey)||"null");return v&&v.nick?v:null}catch{return null}},set(v){try{localStorage.setItem(idKey,JSON.stringify(v))}catch{}}};
 let me=idStore.get();
@@ -570,7 +620,9 @@ const josa=(w,a,b)=>w+(hasBatchim(w)?a:b);
 
 function nextUnlocked(){for(let i=0;i<missions.length;i++)if(!completed.has(i))return i;return missions.length}
 function allDone(){return completed.size===missions.length}
-function stateOf(i){if(i===B)return allDone()?"bonus":"locked";const n=nextUnlocked();return completed.has(i)?"done":i===n?"current":"locked"}
+function classOpen(){return allDone()||CLASS_OPEN}
+function isDone(i){return isFriend(i)?classDone.has(i-F0):completed.has(i)}
+function stateOf(i){if(i===B)return allDone()?"bonus":"locked";if(isFriend(i))return classOpen()?(classDone.has(i-F0)?"done":"open"):"locked";const n=nextUnlocked();return completed.has(i)?"done":i===n?"current":"locked"}
 function nodePoint(m){const[x,y]=proj(m.lon,m.lat);return[x+m.dx,y+m.dy]}
 
 function drawMap(){
@@ -591,7 +643,8 @@ function renderRoutes(){
   const all=allDone(),stops=all?[...missions,BONUS]:missions;
   let s="";for(let i=0;i<stops.length-1;i++){if(!completed.has(i))continue;const[x1,y1]=nodePoint(stops[i]),[x2,y2]=nodePoint(stops[i+1]),bend=i%2?40:-40;s+=`<path class="route reached ${all?"flow":""}" d="M${x1} ${y1} Q${(x1+x2)/2} ${(y1+y2)/2+bend} ${x2} ${y2}"/>`}
   $("routeLayer").innerHTML=s;
-  $("pinLayer").innerHTML=stops.map(m=>{const[x,y]=proj(m.lon,m.lat),[nx,ny]=nodePoint(m);return(m.dx||m.dy?`<line class="leader" x1="${x}" y1="${y}" x2="${nx}" y2="${ny}"/>`:"")+`<circle class="pin-dot" cx="${x}" cy="${y}" r="5"/>`}).join("");
+  const pins=classOpen()?[...stops,...CLASS_NPCS]:stops;
+  $("pinLayer").innerHTML=pins.map(m=>{const[x,y]=proj(m.lon,m.lat),[nx,ny]=nodePoint(m);return(m.dx||m.dy?`<line class="leader" x1="${x}" y1="${y}" x2="${nx}" y2="${ny}"/>`:"")+`<circle class="pin-dot" cx="${x}" cy="${y}" r="5"/>`}).join("");
 }
 function renderReveal(){
   const all=allDone();
@@ -601,19 +654,22 @@ function renderNodes(){
   $("nodes").innerHTML=missions.map((m,i)=>{const st=stateOf(i),[x,y]=nodePoint(m),status=st==="done"?"다녀왔어요":st==="current"?"지금 갈 곳":"잠겨 있어요";
     return`<div class="map-node ${st} ${i===selected?"selected":""}" data-index="${i}" style="left:${x/W*100}%;top:${y/H*100}%;--c:${m.theme}"><button class="node-button" type="button" aria-label="${i+1}번 ${m.place}, ${status}" ${st==="locked"?'aria-disabled="true"':""}><span class="node-core"><span class="node-num">${i+1}</span>${faceImg(m,"node-face")}<span class="node-badge">${icons[st]}</span></span><span class="node-label"><small>${status}</small>${m.place}</span></button></div>`}).join("")
   +(allDone()?(()=>{const[x,y]=nodePoint(BONUS),made=!!teamNpc,status=made?"완성했어요":"새 임무!",label=made?`우리 NPC ${esc(teamNpc.name)}`:"우리 모둠";
-    return`<div class="map-node bonus ${made?"made":""} ${selected===B?"selected":""}" data-index="${B}" style="left:${x/W*100}%;top:${y/H*100}%"><button class="node-button" type="button" aria-label="비밀 임무 우리 모둠, ${status}"><span class="node-core"><span class="node-num">★</span>${made?teamNpc.emoji:BONUS.emoji}<span class="node-badge">${made?"✅":""}</span></span><span class="node-label"><small>${status}</small>${label}</span></button></div>`})():"");
+    return`<div class="map-node bonus ${made?"made":""} ${selected===B?"selected":""}" data-index="${B}" style="left:${x/W*100}%;top:${y/H*100}%"><button class="node-button" type="button" aria-label="비밀 임무 우리 모둠, ${status}"><span class="node-core"><span class="node-num">★</span>${made?teamNpc.emoji:BONUS.emoji}<span class="node-badge">${made?"✅":""}</span></span><span class="node-label"><small>${status}</small>${label}</span></button></div>`})():"")
+  +(classOpen()?CLASS_NPCS.map((m,k)=>{const i=F0+k,st=stateOf(i),[x,y]=nodePoint(m),status=st==="done"?"만났어요":`${m.team}이 만든 NPC`;
+    return`<div class="map-node friend ${st} ${i===selected?"selected":""}" data-index="${i}" style="left:${x/W*100}%;top:${y/H*100}%;--c:${m.theme}"><button class="node-button" type="button" aria-label="${m.team}이 만든 NPC ${esc(m.name)}, ${status}"><span class="node-core"><span class="node-num">👥</span>${faceImg(m,"node-face")}<span class="node-badge">${st==="done"?"✅":""}</span></span><span class="node-label"><small>${status}</small>${esc(m.name)}</span></button></div>`}).join(""):"");
+  $("legendFriend").hidden=!classOpen();
   document.querySelectorAll(".node-button").forEach(b=>b.addEventListener("click",()=>selectNode(Number(b.parentElement.dataset.index))));
 }
 function renderPanel(){
-  const all=allDone(),bonus=selected===B,m=bonus?BONUS:missions[selected],st=stateOf(selected);
+  const all=allDone(),bonus=selected===B,friend=isFriend(selected),m=bonus?BONUS:friend?friendOf(selected):missions[selected],st=stateOf(selected);
   document.querySelector(".quest-panel").style.setProperty("--c",bonus?"#8e5bd6":m.theme);
-  $("panelChips").innerHTML=(bonus?`<span class="chip bonus">✨ 비밀 임무</span>`:`<span class="chip step">임무 ${selected+1} / ${missions.length}</span>`)+`<span class="chip">📍 ${m.place} · ${m.region}</span><span class="chip topic">${m.topic}</span>`;
-  $("panelTitle").textContent=m.title;$("avatar").innerHTML=bonus?esc(teamNpc?teamNpc.emoji:m.emoji):faceImg(m,"avatar-face");$("avatar").classList.toggle("bonus",bonus);
+  $("panelChips").innerHTML=(bonus?`<span class="chip bonus">✨ 비밀 임무</span>`:friend?`<span class="chip friend">👥 친구가 만든 NPC</span><span class="chip">${esc(m.team)}</span>`:`<span class="chip step">임무 ${selected+1} / ${missions.length}</span>`)+`<span class="chip">📍 ${m.place} · ${m.region}</span><span class="chip topic">${m.topic}</span>`;
+  $("panelTitle").textContent=m.title;$("avatar").innerHTML=bonus?esc(teamNpc?teamNpc.emoji:m.emoji):faceImg(m,"avatar-face");$("avatar").classList.toggle("bonus",bonus);$("avatar").classList.toggle("friend",friend);
   $("npcName").innerHTML=`${esc(bonus&&teamNpc?teamNpc.name:m.name)}<span>${esc(bonus&&teamNpc?teamNpc.place:m.role)}</span>`;
   $("npcSay").textContent=bonus&&teamNpc?teamNpc.say:m.say;$("objective").textContent=m.mission;
-  const btn=$("enterBtn");btn.disabled=st==="locked";btn.classList.toggle("done",st==="done");btn.classList.toggle("bonus",bonus);
+  const btn=$("enterBtn");btn.disabled=st==="locked";btn.classList.toggle("done",st==="done");btn.classList.toggle("bonus",bonus);btn.classList.toggle("friend",friend&&st!=="done");
   btn.textContent=bonus?(teamNpc?"✨ 우리 NPC 카드 보기":"✨ 우리 NPC 만들기 →"):st==="done"?`✅ ${josa(m.name,"과","와")} 나눈 이야기 다시 보기`:st==="locked"?"🔒 아직 잠겨 있어요":`${m.name} 만나러 가기 →`;
-  $("lockedNote").hidden=st!=="locked";$("finale").hidden=!all||bonus;$("objectiveBox").hidden=all&&!bonus;
+  $("lockedNote").hidden=st!=="locked";$("finale").hidden=!all||bonus||friend;$("finaleFriends").hidden=!classOpen();$("objectiveBox").hidden=all&&!bonus&&!friend;
   const missing=missions.filter(x=>!x.botUrl).length;
   $("teacherNote").hidden=!missing;$("teacherNote").textContent=`※ 선생님 확인: 챗봇 링크가 ${missing}곳 비어 있어요 (index.html의 botUrl).`;
 }
@@ -622,35 +678,36 @@ function renderHud(){
   if(all&&!justCompleted){$("fragments").innerHTML=`<i class="globe-done">🌍</i>`}
   else{$("fragments").innerHTML=missions.map((_,i)=>`<i class="fragment ${completed.has(i)?"on":""} ${all?"merge":""}" style="--k:${i}">${completed.has(i)?"🧩":""}</i>`).join("");
     if(all)pending.push(setTimeout(()=>{justCompleted=false;$("fragments").innerHTML=`<i class="globe-done">🌍</i>`},900))}
-  $("progressLabel").textContent=all?"세계 지도 완성!":`세계 조각 ${completed.size} / ${missions.length}`;
+  $("progressLabel").textContent=all?(classOpen()?`세계 지도 완성! · 친구 NPC ${classDone.size} / ${CLASS_NPCS.length}`:"세계 지도 완성!"):`세계 조각 ${completed.size} / ${missions.length}`;
   document.querySelector(".progress").classList.toggle("is-complete",all);
 }
 function render(){const box=$("mapBox");box.classList.toggle("is-complete",allDone());box.classList.toggle("is-just",allDone()&&justCompleted);renderRoutes();renderReveal();renderNodes();renderPanel();renderHud()}
 
 function selectNode(i){
   if(i===B&&!allDone())return;
+  if(isFriend(i)&&!classOpen())return;
   if(stateOf(i)==="locked"){const n=document.querySelector(`.map-node[data-index="${i}"]`);n.classList.remove("shake");void n.offsetWidth;n.classList.add("shake");showToast(`🔒 ${nextUnlocked()+1}번 인물을 먼저 만나고 오세요.`);return}
   selected=i;renderNodes();renderPanel();document.querySelector(`.map-node[data-index="${i}"] .node-button`)?.focus();
 }
 function openMission(){
   if(selected===B){openNpcDialog();return}
-  const m=missions[selected],st=stateOf(selected);if(st==="locked")return;
+  const friend=isFriend(selected),m=friend?friendOf(selected):missions[selected],st=stateOf(selected);if(st==="locked")return;
   $("missionDialog").style.setProperty("--c",m.theme);
-  $("dialogChips").innerHTML=`<span class="chip">📍 ${m.place}</span><span class="chip topic">${m.topic}</span>`;
+  $("dialogChips").innerHTML=(friend?`<span class="chip friend">👥 ${esc(m.team)}이 만든 NPC</span>`:"")+`<span class="chip">📍 ${m.place}</span><span class="chip topic">${m.topic}</span>`;
   $("dialogTitle").innerHTML=`${faceImg(m,"title-face")} ${esc(m.name)}의 이야기`;
   const talk=$("talkBtn");talk.href=m.botUrl||"https://egpt.kr/";talk.textContent=`💬 ${josa(m.name,"과","와")} 대화 시작하기`;
   const intro=me?`안녕! 나는 ${me.team} ${josa(me.nick,"이야","야")}`:null;
   const qs=intro?[intro,...m.questions]:m.questions;
   $("questions").innerHTML=qs.map((q,k)=>`<button class="q ${intro&&k===0?"intro":""}" type="button"><span>${intro&&k===0?"👋 먼저 인사해요: ":""}${esc(q)}</span><span class="copy">복사</span></button>`).join("");
   $("questions").querySelectorAll(".q").forEach((b,k)=>b.addEventListener("click",()=>copyQuestion(qs[k])));
-  const done=completed.has(selected);
+  const done=isDone(selected);
   $("checks").innerHTML=(m.checks||defaultChecks).map(c=>`<label class="check"><input type="checkbox" ${done?"checked disabled":""}><span>${esc(c)}</span></label>`).join("");
   $("checks").querySelectorAll("input").forEach(c=>c.addEventListener("change",updateComplete));
   updateComplete();$("missionDialog").showModal();
 }
 function updateComplete(){
-  const done=completed.has(selected),boxes=[...$("checks").querySelectorAll("input")],ok=boxes.every(b=>b.checked);
-  const b=$("completeBtn");b.disabled=done||!ok;b.textContent=done?"🧩 이미 받은 세계 조각이에요":"🧩 세계 조각 받기";
+  const done=isDone(selected),boxes=[...$("checks").querySelectorAll("input")],ok=boxes.every(b=>b.checked),friend=isFriend(selected);
+  const b=$("completeBtn");b.disabled=done||!ok;b.textContent=friend?(done?"🤝 이미 만난 친구예요":"🤝 친구의 마음 듣기 완료"):done?"🧩 이미 받은 세계 조각이에요":"🧩 세계 조각 받기";
   $("completeHint").hidden=done||ok;
 }
 function copyQuestion(q){
@@ -659,8 +716,12 @@ function copyQuestion(q){
   if(navigator.clipboard?.writeText)navigator.clipboard.writeText(q).then(ok,fallback);else fallback();
 }
 function completeMission(){
+  if(isFriend(selected)){const k=selected-F0,m=friendOf(selected);if(classDone.has(k))return;classDone.add(k);classStore.set([...classDone]);
+    $("missionDialog").close();$("celebrate").querySelector(".reward").innerHTML=`<div><span>🤝</span>친구의 마음을<br>들었어요!</div>`;$("celebrate").classList.add("show");
+    pending.push(setTimeout(()=>$("celebrate").classList.remove("show"),1300));
+    pending.push(setTimeout(()=>{render();showToast(classDone.size===CLASS_NPCS.length?"🎉 우리 반 친구들이 만든 NPC를 모두 만났어요!":`🤝 ${josa(m.name,"과","와")} 이야기를 나눴어요! 친구 NPC ${classDone.size} / ${CLASS_NPCS.length}`)},900));return}
   if(completed.has(selected))return;completed.add(selected);store.set([...completed]);
-  $("missionDialog").close();$("celebrate").classList.add("show");
+  $("missionDialog").close();$("celebrate").querySelector(".reward").innerHTML=`<div><span>🧩</span>세계 조각<br>획득!</div>`;$("celebrate").classList.add("show");
   pending.push(setTimeout(()=>$("celebrate").classList.remove("show"),1300));
   const all=allDone();if(all)justCompleted=true;
   pending.push(setTimeout(()=>{selected=all?B:nextUnlocked();render();showToast(all?"🎉 세계 지도가 완성됐어요! 🚩 한국에 새 신호가 나타났어요!":`🗺️ ${missions[nextUnlocked()].place}에 새 신호가 나타났어요!`)},900));
@@ -672,7 +733,7 @@ $("closeDialog").addEventListener("click",()=>$("missionDialog").close());
 let downOnBackdrop=false;$("missionDialog").addEventListener("mousedown",e=>{downOnBackdrop=e.target===$("missionDialog")});
 $("missionDialog").addEventListener("click",e=>{if(downOnBackdrop&&e.target===$("missionDialog"))$("missionDialog").close()});
 $("completeBtn").addEventListener("click",completeMission);
-$("resetBtn").addEventListener("click",()=>{if(confirm("모은 세계 조각과 우리 모둠 NPC 카드가 모두 사라져요. 처음부터 다시 할까요?")){pending.forEach(clearTimeout);pending=[];justCompleted=false;$("celebrate").classList.remove("show");completed.clear();store.clear();teamNpc=null;npcStore.clear();selected=0;render()}});
+$("resetBtn").addEventListener("click",()=>{if(confirm("모은 세계 조각, 친구 NPC 기록, 우리 모둠 NPC 카드가 모두 사라져요. 처음부터 다시 할까요?")){pending.forEach(clearTimeout);pending=[];justCompleted=false;$("celebrate").classList.remove("show");completed.clear();store.clear();classDone.clear();classStore.clear();teamNpc=null;npcStore.clear();selected=0;render()}});
 $("goBonus").addEventListener("click",()=>selectNode(B));
 
 // ----- 우리 모둠 NPC 만들기 -----
@@ -724,7 +785,7 @@ const DEMO=new URLSearchParams(location.search).has("demo");
 let demoTimers=[];
 function demoRun(){
   demoTimers.forEach(clearTimeout);demoTimers=[];pending.forEach(clearTimeout);pending=[];
-  completed.clear();store.clear();teamNpc=null;npcStore.clear();justCompleted=false;
+  completed.clear();store.clear();classDone.clear();classStore.clear();teamNpc=null;npcStore.clear();justCompleted=false;
   me={team:"1모둠",nick:"바다",issued:new Date().toLocaleDateString("ko-KR")};idStore.set(me);renderPassportBadge();
   selected=0;render();$("missionDialog").open&&$("missionDialog").close();$("npcDialog").open&&$("npcDialog").close();
   const at=(ms,fn)=>demoTimers.push(setTimeout(fn,ms));
